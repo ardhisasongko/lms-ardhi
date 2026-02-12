@@ -19,7 +19,11 @@ const PORT = process.env.PORT || 5000;
 console.log('CORS allowed origins:', process.env.FRONTEND_URL);
 app.use(
   cors({
-    origin: '*',
+    origin: [
+      process.env.FRONTEND_URL,
+      'http://localhost:5000',
+      'https://tka-ardhi.netlify.app',
+    ],
     credentials: true,
   }),
 );
