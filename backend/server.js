@@ -21,7 +21,7 @@ app.use(
   cors({
     origin: [
       process.env.FRONTEND_URL,
-      'http://localhost:5000',
+      'http://localhost:5173',
       'https://tka-ardhi.netlify.app',
     ],
     credentials: true,
