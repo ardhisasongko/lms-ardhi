@@ -27,12 +27,18 @@ const Quiz = ({
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
-  // Current question
+  // Current question - add index as id if not present
   const currentQuestion = quizzes[currentQuestionIndex];
+  const currentQuestionId = currentQuestion?.id || `q-${currentQuestionIndex}`;
   const totalQuestions = quizzes.length;
   const isLastQuestion = currentQuestionIndex === totalQuestions - 1;
   const allQuestionsAnswered =
     Object.keys(selectedAnswers).length === totalQuestions;
+
+  // Check if options is array or object
+  const isArrayOptions = Array.isArray(currentQuestion?.options);
+  const optionKeys = isArrayOptions ? [0, 1, 2, 3] : ['a', 'b', 'c', 'd'];
+  const optionLabels = ['A', 'B', 'C', 'D'];
 
   // =====================
   // VANILLA JS QUIZ LOGIC
@@ -47,7 +53,7 @@ const Quiz = ({
 
     // Vanilla JS: Create new object with spread operator
     const newAnswers = { ...selectedAnswers };
-    newAnswers[currentQuestion.id] = answer;
+    newAnswers[currentQuestionId] = answer;
     setSelectedAnswers(newAnswers);
   };
 
@@ -120,7 +126,7 @@ const Quiz = ({
         onComplete(responseData.score, responseData.passed);
       }
     } catch (err) {
-      setError(err.message || 'Gagal submit quiz. Silakan coba lagi.');
+      setError('Gagal submit latihan soal. Silakan coba lagi.');
     } finally {
       setLoading(false);
     }
@@ -192,7 +198,7 @@ const Quiz = ({
 
           <p className='text-gray-600'>
             {results.passed
-              ? 'Anda telah menyelesaikan quiz ini.'
+              ? 'Anda telah menyelesaikan latihan soal ini.'
               : 'Anda perlu skor minimal 70% untuk lulus.'}
           </p>
         </div>
@@ -291,7 +297,7 @@ const Quiz = ({
     <div className='card p-6 mb-6 animate-fade-in'>
       {/* Header */}
       <div className='flex items-center justify-between mb-6'>
-        <h2 className='text-xl font-bold text-gray-900'>Quiz</h2>
+        <h2 className='text-xl font-bold text-gray-900'>Latihan Soal</h2>
         <button onClick={onClose} className='text-gray-400 hover:text-gray-600'>
           <svg
             className='w-6 h-6'
@@ -335,16 +341,16 @@ const Quiz = ({
 
         {/* Options */}
         <div className='space-y-3'>
-          {['a', 'b', 'c', 'd'].map((option) => {
-            const optionValue = currentQuestion?.options?.[option];
-            const isSelected = selectedAnswers[currentQuestion?.id] === option;
+          {optionKeys.map((optionKey, idx) => {
+            const optionValue = currentQuestion?.options?.[optionKey];
+            const isSelected = selectedAnswers[currentQuestionId] === optionKey;
 
             if (!optionValue) return null;
 
             return (
               <button
-                key={option}
-                onClick={() => handleSelectAnswer(option)}
+                key={optionKey}
+                onClick={() => handleSelectAnswer(optionKey)}
                 className={`w-full p-4 rounded-lg border-2 text-left transition-all ${
                   isSelected
                     ? 'border-primary-600 bg-primary-50 text-primary-700'
@@ -359,7 +365,7 @@ const Quiz = ({
                         : 'bg-gray-100 text-gray-600'
                     }`}
                   >
-                    {option.toUpperCase()}
+                    {optionLabels[idx]}
                   </span>
                   <span className='text-gray-700'>{optionValue}</span>
                 </div>
@@ -388,19 +394,22 @@ const Quiz = ({
 
         <div className='flex gap-2'>
           {/* Question dots */}
-          {quizzes.map((_, index) => (
-            <button
-              key={index}
-              onClick={() => setCurrentQuestionIndex(index)}
-              className={`w-3 h-3 rounded-full transition-colors ${
-                index === currentQuestionIndex
-                  ? 'bg-primary-600'
-                  : selectedAnswers[quizzes[index]?.id]
-                    ? 'bg-green-500'
-                    : 'bg-gray-300'
-              }`}
-            />
-          ))}
+          {quizzes.map((_, index) => {
+            const qId = quizzes[index]?.id || `q-${index}`;
+            return (
+              <button
+                key={index}
+                onClick={() => setCurrentQuestionIndex(index)}
+                className={`w-3 h-3 rounded-full transition-colors ${
+                  index === currentQuestionIndex
+                    ? 'bg-primary-600'
+                    : selectedAnswers[qId]
+                      ? 'bg-green-500'
+                      : 'bg-gray-300'
+                }`}
+              />
+            );
+          })}
         </div>
 
         {isLastQuestion ? (

@@ -1,13 +1,12 @@
 import express from 'express';
-import { v4 as uuidv4 } from 'uuid';
 import { body, validationResult } from 'express-validator';
 import {
   getSheetData,
-  appendRow,
+  insertRow,
   findByColumn,
   filterByColumn,
-  SHEETS,
-} from '../services/googleSheets.js';
+  TABLES,
+} from '../services/supabase.js';
 import {
   authenticateToken,
   authorizeRoles,
@@ -25,7 +24,7 @@ router.get('/:id', optionalAuth, async (req, res) => {
     const { id } = req.params;
 
     // Get lesson
-    const lesson = await findByColumn(SHEETS.LESSONS, 'id', id);
+    const lesson = await findByColumn(TABLES.LESSONS, 'id', id);
     if (!lesson) {
       return res.status(404).json({
         success: false,
@@ -34,25 +33,30 @@ router.get('/:id', optionalAuth, async (req, res) => {
     }
 
     // Get quiz questions for this lesson
-    const allQuizzes = await getSheetData(SHEETS.QUIZZES);
-    const quizzes = allQuizzes
-      .filter((quiz) => quiz.lesson_id === id)
-      .map((quiz) => ({
-        id: quiz.id,
-        question: quiz.question,
-        options: {
-          a: quiz.option_a,
-          b: quiz.option_b,
-          c: quiz.option_c,
-          d: quiz.option_d,
-        },
-        // Note: correct_answer is NOT sent to frontend
+    const allQuizzes = await getSheetData(TABLES.QUIZZES);
+    const lessonQuiz = allQuizzes.find((quiz) => quiz.lesson_id === id);
+
+    // Extract questions from the questions JSONB field
+    let quizzes = [];
+    if (lessonQuiz && lessonQuiz.questions) {
+      // Handle both array and already-parsed questions
+      const questionsData =
+        typeof lessonQuiz.questions === 'string'
+          ? JSON.parse(lessonQuiz.questions)
+          : lessonQuiz.questions;
+
+      quizzes = questionsData.map((q, index) => ({
+        id: `${lessonQuiz.id}-q${index}`,
+        question: q.question,
+        options: q.options, // Array format: ['opt1', 'opt2', 'opt3', 'opt4']
+        correctIndex: q.correctIndex, // Store for backend validation
       }));
+    }
 
     // Get user progress if authenticated
     let userProgress = null;
     if (req.user) {
-      const allProgress = await getSheetData(SHEETS.USER_PROGRESS);
+      const allProgress = await getSheetData(TABLES.USER_PROGRESS);
       userProgress =
         allProgress.find(
           (p) => p.user_id === req.user.id && p.lesson_id === id,
@@ -60,12 +64,12 @@ router.get('/:id', optionalAuth, async (req, res) => {
     }
 
     // Get module info
-    const module = await findByColumn(SHEETS.MODULES, 'id', lesson.module_id);
+    const module = await findByColumn(TABLES.MODULES, 'id', lesson.module_id);
 
     // Get course info
     let course = null;
     if (module) {
-      course = await findByColumn(SHEETS.COURSES, 'id', module.course_id);
+      course = await findByColumn(TABLES.COURSES, 'id', module.course_id);
     }
 
     // Get next and previous lessons
@@ -73,10 +77,10 @@ router.get('/:id', optionalAuth, async (req, res) => {
     let nextLesson = null;
 
     if (module) {
-      const allLessons = await getSheetData(SHEETS.LESSONS);
+      const allLessons = await getSheetData(TABLES.LESSONS);
       const moduleLessons = allLessons
         .filter((l) => l.module_id === lesson.module_id)
-        .sort((a, b) => parseInt(a.order) - parseInt(b.order));
+        .sort((a, b) => parseInt(a.order_index) - parseInt(b.order_index));
 
       const currentIndex = moduleLessons.findIndex((l) => l.id === id);
 
@@ -133,20 +137,20 @@ router.post(
       const {
         module_id,
         title,
-        youtube_url,
-        summary = '',
-        order = 1,
+        video_url,
+        content = '',
+        order_index = 1,
       } = req.body;
 
-      if (!module_id || !title || !youtube_url) {
+      if (!module_id || !title) {
         return res.status(400).json({
           success: false,
-          message: 'Module ID, title, and YouTube URL are required',
+          message: 'Module ID and title are required',
         });
       }
 
       // Verify module exists
-      const module = await findByColumn(SHEETS.MODULES, 'id', module_id);
+      const module = await findByColumn(TABLES.MODULES, 'id', module_id);
       if (!module) {
         return res.status(404).json({
           success: false,
@@ -154,29 +158,19 @@ router.post(
         });
       }
 
-      const lessonId = uuidv4();
-
-      await appendRow(SHEETS.LESSONS, [
-        lessonId,
+      const newLesson = await insertRow(TABLES.LESSONS, {
         module_id,
         title,
-        youtube_url,
-        summary,
-        order,
-      ]);
+        video_url,
+        content,
+        order_index,
+      });
 
       res.status(201).json({
         success: true,
         message: 'Lesson created successfully',
         data: {
-          lesson: {
-            id: lessonId,
-            module_id,
-            title,
-            youtube_url,
-            summary,
-            order,
-          },
+          lesson: newLesson,
         },
       });
     } catch (error) {
@@ -210,7 +204,7 @@ router.post(
       }
 
       // Verify lesson exists
-      const lesson = await findByColumn(SHEETS.LESSONS, 'id', id);
+      const lesson = await findByColumn(TABLES.LESSONS, 'id', id);
       if (!lesson) {
         return res.status(404).json({
           success: false,
@@ -221,35 +215,18 @@ router.post(
       const createdQuizzes = [];
 
       for (const q of questions) {
-        if (
-          !q.question ||
-          !q.option_a ||
-          !q.option_b ||
-          !q.option_c ||
-          !q.option_d ||
-          !q.correct_answer
-        ) {
+        if (!q.question || !q.options || !q.correct_answer) {
           continue; // Skip invalid questions
         }
 
-        const quizId = uuidv4();
-
-        await appendRow(SHEETS.QUIZZES, [
-          quizId,
-          id,
-          q.question,
-          q.option_a,
-          q.option_b,
-          q.option_c,
-          q.option_d,
-          q.correct_answer.toLowerCase(),
-        ]);
-
-        createdQuizzes.push({
-          id: quizId,
+        const newQuiz = await insertRow(TABLES.QUIZZES, {
           lesson_id: id,
           question: q.question,
+          options: q.options,
+          correct_answer: q.correct_answer.toLowerCase(),
         });
+
+        createdQuizzes.push(newQuiz);
       }
 
       res.status(201).json({

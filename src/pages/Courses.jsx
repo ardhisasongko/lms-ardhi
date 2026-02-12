@@ -64,25 +64,21 @@ const Courses = () => {
   // Get category-specific colors
   const getCategoryColors = (category) => {
     const colors = {
-      Programming: {
+      Penalaran: {
         bg: 'from-primary-500 to-primary-600',
         badge: 'bg-primary-100 text-primary-700',
       },
-      Backend: {
+      Kuantitatif: {
         bg: 'from-secondary-500 to-secondary-600',
         badge: 'bg-secondary-100 text-secondary-700',
       },
-      Design: {
+      PPU: {
         bg: 'from-accent-500 to-accent-600',
         badge: 'bg-accent-100 text-accent-700',
       },
-      Database: {
+      Literasi: {
         bg: 'from-green-500 to-green-600',
         badge: 'bg-green-100 text-green-700',
-      },
-      Tools: {
-        bg: 'from-indigo-500 to-indigo-600',
-        badge: 'bg-indigo-100 text-indigo-700',
       },
     };
     return (
@@ -94,15 +90,15 @@ const Courses = () => {
   };
 
   return (
-    <div className='page-container py-8'>
-      <div className='container-main'>
+    <div className='page-container py-4 sm:py-8'>
+      <div className='container-main px-3 sm:px-4'>
         {/* Demo Mode Banner */}
         {isDemo && (
-          <div className='mb-6 p-4 bg-gradient-to-r from-primary-50 to-secondary-50 border border-primary-200 rounded-xl'>
+          <div className='mb-4 sm:mb-6 p-3 sm:p-4 bg-gradient-to-r from-primary-50 to-secondary-50 border border-primary-200 rounded-xl'>
             <div className='flex items-center'>
-              <div className='w-10 h-10 bg-gradient-to-br from-primary-500 to-secondary-500 rounded-full flex items-center justify-center mr-3'>
+              <div className='w-8 h-8 sm:w-10 sm:h-10 bg-gradient-to-br from-primary-500 to-secondary-500 rounded-full flex items-center justify-center mr-2 sm:mr-3 flex-shrink-0'>
                 <svg
-                  className='w-5 h-5 text-white'
+                  className='w-4 h-4 sm:w-5 sm:h-5 text-white'
                   fill='none'
                   stroke='currentColor'
                   viewBox='0 0 24 24'
@@ -116,12 +112,11 @@ const Courses = () => {
                 </svg>
               </div>
               <div>
-                <span className='font-semibold text-primary-700'>
+                <span className='font-semibold text-primary-700 text-sm sm:text-base'>
                   Mode Demo
                 </span>
-                <p className='text-sm text-gray-600'>
-                  Menampilkan data contoh. Klik course untuk melihat video dan
-                  quiz.
+                <p className='text-xs sm:text-sm text-gray-600'>
+                  Data contoh. Klik materi untuk video & latihan.
                 </p>
               </div>
             </div>
@@ -129,24 +124,23 @@ const Courses = () => {
         )}
 
         {/* Header */}
-        <div className='mb-8'>
-          <span className='inline-block px-4 py-1 bg-accent-100 text-accent-700 rounded-full text-sm font-medium mb-3'>
-            📚 Katalog Pembelajaran
+        <div className='mb-4 sm:mb-8'>
+          <span className='inline-block px-3 sm:px-4 py-1 bg-accent-100 text-accent-700 rounded-full text-xs sm:text-sm font-medium mb-2 sm:mb-3'>
+            📚 Katalog TKA
           </span>
-          <h1 className='text-3xl font-bold text-gray-900 mb-2'>
-            Jelajahi <span className='text-gradient'>Courses</span>
+          <h1 className='text-xl sm:text-3xl font-bold text-gray-900 mb-1 sm:mb-2'>
+            Jelajahi <span className='text-gradient'>Materi TKA</span>
           </h1>
-          <p className='text-gray-600'>
-            Pilih course yang ingin Anda pelajari dan mulai perjalanan belajar
-            Anda
+          <p className='text-gray-600 text-sm sm:text-base'>
+            Pilih subtes yang ingin dipelajari
           </p>
         </div>
 
         {/* Filters */}
-        <div className='mb-8 flex flex-wrap gap-2'>
+        <div className='mb-4 sm:mb-8 flex flex-wrap gap-1.5 sm:gap-2'>
           <button
             onClick={() => handleCategoryChange('')}
-            className={`px-4 py-2 rounded-full text-sm font-medium transition-all ${
+            className={`px-3 sm:px-4 py-1.5 sm:py-2 rounded-full text-xs sm:text-sm font-medium transition-all ${
               selectedCategory === ''
                 ? 'bg-gradient-to-r from-primary-600 to-secondary-600 text-white shadow-md'
                 : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
@@ -160,7 +154,7 @@ const Courses = () => {
               <button
                 key={category}
                 onClick={() => handleCategoryChange(category)}
-                className={`px-4 py-2 rounded-full text-sm font-medium transition-all ${
+                className={`px-3 sm:px-4 py-1.5 sm:py-2 rounded-full text-xs sm:text-sm font-medium transition-all ${
                   selectedCategory === category
                     ? `bg-gradient-to-r ${catColors.bg} text-white shadow-md`
                     : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
@@ -181,9 +175,9 @@ const Courses = () => {
         {loading ? (
           <Loading size='lg' text='Memuat courses...' />
         ) : courses.length === 0 ? (
-          <div className='text-center py-12'>
+          <div className='text-center py-8 sm:py-12'>
             <svg
-              className='w-16 h-16 text-gray-300 mx-auto mb-4'
+              className='w-12 h-12 sm:w-16 sm:h-16 text-gray-300 mx-auto mb-3 sm:mb-4'
               fill='none'
               stroke='currentColor'
               viewBox='0 0 24 24'
@@ -195,15 +189,15 @@ const Courses = () => {
                 d='M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253'
               />
             </svg>
-            <h3 className='text-lg font-medium text-gray-900 mb-1'>
+            <h3 className='text-base sm:text-lg font-medium text-gray-900 mb-1'>
               Belum ada course
             </h3>
-            <p className='text-gray-500'>Course akan segera tersedia</p>
+            <p className='text-gray-500 text-sm'>Course akan segera tersedia</p>
           </div>
         ) : (
           <>
             {/* Course Grid */}
-            <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8'>
+            <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 mb-6 sm:mb-8'>
               {courses.map((course) => {
                 const colors = getCategoryColors(course.category);
                 return (
@@ -213,10 +207,10 @@ const Courses = () => {
                     className='card-hover group'
                   >
                     <div
-                      className={`h-44 bg-gradient-to-br ${colors.bg} flex items-center justify-center relative overflow-hidden`}
+                      className={`h-32 sm:h-44 bg-gradient-to-br ${colors.bg} flex items-center justify-center relative overflow-hidden`}
                     >
                       <svg
-                        className='w-20 h-20 text-white/20 group-hover:scale-110 transition-transform'
+                        className='w-14 h-14 sm:w-20 sm:h-20 text-white/20 group-hover:scale-110 transition-transform'
                         fill='none'
                         stroke='currentColor'
                         viewBox='0 0 24 24'
@@ -230,22 +224,22 @@ const Courses = () => {
                       </svg>
                       <div className='absolute inset-0 bg-gradient-to-t from-black/30 to-transparent' />
                     </div>
-                    <div className='p-5'>
+                    <div className='p-3 sm:p-5'>
                       <span
-                        className={`inline-block px-2.5 py-1 ${colors.badge} text-xs font-medium rounded-full mb-3`}
+                        className={`inline-block px-2 sm:px-2.5 py-0.5 sm:py-1 ${colors.badge} text-xs font-medium rounded-full mb-2 sm:mb-3`}
                       >
                         {course.category}
                       </span>
-                      <h3 className='font-semibold text-gray-900 mb-2 line-clamp-2 group-hover:text-primary-600 transition-colors'>
+                      <h3 className='font-semibold text-gray-900 mb-1 sm:mb-2 line-clamp-2 group-hover:text-primary-600 transition-colors text-sm sm:text-base'>
                         {course.title}
                       </h3>
-                      <p className='text-gray-500 text-sm line-clamp-2 mb-4'>
+                      <p className='text-gray-500 text-xs sm:text-sm line-clamp-2 mb-3 sm:mb-4'>
                         {course.description}
                       </p>
-                      <div className='flex items-center justify-between text-sm'>
+                      <div className='flex items-center justify-between text-xs sm:text-sm'>
                         <div className='flex items-center text-gray-400'>
                           <svg
-                            className='w-4 h-4 mr-1'
+                            className='w-3 h-3 sm:w-4 sm:h-4 mr-1'
                             fill='none'
                             stroke='currentColor'
                             viewBox='0 0 24 24'
@@ -271,20 +265,21 @@ const Courses = () => {
 
             {/* Pagination */}
             {pagination && pagination.totalPages > 1 && (
-              <div className='flex justify-center gap-2'>
+              <div className='flex justify-center gap-1.5 sm:gap-2'>
                 <button
                   onClick={() => setPage(page - 1)}
                   disabled={page === 1}
-                  className='px-4 py-2 rounded-lg border border-gray-200 text-gray-600 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed'
+                  className='px-2 sm:px-4 py-1.5 sm:py-2 rounded-lg border border-gray-200 text-gray-600 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed text-xs sm:text-sm'
                 >
-                  Previous
+                  <span className='hidden sm:inline'>Previous</span>
+                  <span className='sm:hidden'>←</span>
                 </button>
 
                 {[...Array(pagination.totalPages)].map((_, i) => (
                   <button
                     key={i + 1}
                     onClick={() => setPage(i + 1)}
-                    className={`w-10 h-10 rounded-lg font-medium transition-colors ${
+                    className={`w-8 h-8 sm:w-10 sm:h-10 rounded-lg font-medium transition-colors text-xs sm:text-sm ${
                       page === i + 1
                         ? 'bg-primary-600 text-white'
                         : 'border border-gray-200 text-gray-600 hover:bg-gray-50'
@@ -297,9 +292,10 @@ const Courses = () => {
                 <button
                   onClick={() => setPage(page + 1)}
                   disabled={page === pagination.totalPages}
-                  className='px-4 py-2 rounded-lg border border-gray-200 text-gray-600 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed'
+                  className='px-2 sm:px-4 py-1.5 sm:py-2 rounded-lg border border-gray-200 text-gray-600 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed text-xs sm:text-sm'
                 >
-                  Next
+                  <span className='hidden sm:inline'>Next</span>
+                  <span className='sm:hidden'>→</span>
                 </button>
               </div>
             )}

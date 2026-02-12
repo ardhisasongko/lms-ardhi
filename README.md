@@ -1,6 +1,6 @@
-# 🎓 LMS Ardhi - Modern Learning Management System
+# � TKA Master - Platform Persiapan Tes Kemampuan Akademik
 
-Platform pembelajaran modern (BAHASA INGGRIS & CODING) dengan video YouTube embed, quiz interaktif, dan progress tracking menggunakan Google Spreadsheet sebagai database.
+Platform persiapan TKA (Tes Kemampuan Akademik) dengan video pembahasan, latihan soal interaktif, dan progress tracking menggunakan Google Spreadsheet sebagai database.
 
 ## 📋 Table of Contents
 
@@ -37,7 +37,7 @@ Platform pembelajaran modern (BAHASA INGGRIS & CODING) dengan video YouTube embe
 ### Flow Diagram
 
 1. **User Flow:**
-   - Landing Page → Register/Login → Dashboard → Pilih Course → Tonton Lesson → Kerjakan Quiz → Progress tersimpan
+   - Landing Page → Register/Login → Dashboard → Pilih Subtes TKA → Tonton Pembahasan → Kerjakan Latihan Soal → Progress tersimpan
 
 2. **Auth Flow:**
    - Register → Password di-hash (bcrypt) → Data ke Google Sheets

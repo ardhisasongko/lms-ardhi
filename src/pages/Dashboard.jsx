@@ -73,37 +73,39 @@ const Dashboard = () => {
   }
 
   return (
-    <div className='page-container py-8'>
-      <div className='container-main'>
+    <div className='page-container py-4 sm:py-8'>
+      <div className='container-main px-3 sm:px-4'>
         {/* Header */}
-        <div className='mb-8'>
-          <h1 className='text-3xl font-bold text-gray-900'>
+        <div className='mb-4 sm:mb-8'>
+          <h1 className='text-xl sm:text-3xl font-bold text-gray-900'>
             Selamat datang, {user?.name}! 👋
           </h1>
-          <p className='text-gray-600 mt-1'>
-            Lanjutkan perjalanan belajar Anda
+          <p className='text-sm sm:text-base text-gray-600 mt-1'>
+            Lanjutkan persiapan TKA Anda
           </p>
         </div>
 
         {error && (
-          <div className='mb-6 p-4 bg-red-50 border border-red-200 rounded-lg text-red-700'>
+          <div className='mb-4 sm:mb-6 p-3 sm:p-4 bg-red-50 border border-red-200 rounded-lg text-red-700 text-sm'>
             {error}
           </div>
         )}
 
-        {/* Stats Cards */}
-        <div className='grid grid-cols-1 md:grid-cols-4 gap-6 mb-8'>
-          <div className='card p-6'>
+        {/* Stats Cards - 2x2 on mobile, 4 columns on desktop */}
+        <div className='grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-6 mb-4 sm:mb-8'>
+          <div className='card p-3 sm:p-6'>
             <div className='flex items-center justify-between'>
-              <div>
-                <p className='text-sm text-gray-500 mb-1'>Lessons Selesai</p>
-                <p className='text-3xl font-bold text-gray-900'>
+              <div className='min-w-0 flex-1'>
+                <p className='text-xs sm:text-sm text-gray-500 mb-0.5 sm:mb-1 truncate'>
+                  Selesai
+                </p>
+                <p className='text-xl sm:text-3xl font-bold text-gray-900'>
                   {progress?.statistics?.completedLessons || 0}
                 </p>
               </div>
-              <div className='w-12 h-12 bg-green-100 rounded-xl flex items-center justify-center'>
+              <div className='w-8 h-8 sm:w-12 sm:h-12 bg-green-100 rounded-lg sm:rounded-xl flex items-center justify-center flex-shrink-0 ml-2'>
                 <svg
-                  className='w-6 h-6 text-green-600'
+                  className='w-4 h-4 sm:w-6 sm:h-6 text-green-600'
                   fill='none'
                   stroke='currentColor'
                   viewBox='0 0 24 24'
@@ -119,17 +121,19 @@ const Dashboard = () => {
             </div>
           </div>
 
-          <div className='card p-6'>
+          <div className='card p-3 sm:p-6'>
             <div className='flex items-center justify-between'>
-              <div>
-                <p className='text-sm text-gray-500 mb-1'>Sedang Berlangsung</p>
-                <p className='text-3xl font-bold text-gray-900'>
+              <div className='min-w-0 flex-1'>
+                <p className='text-xs sm:text-sm text-gray-500 mb-0.5 sm:mb-1 truncate'>
+                  Berlangsung
+                </p>
+                <p className='text-xl sm:text-3xl font-bold text-gray-900'>
                   {progress?.statistics?.inProgressCount || 0}
                 </p>
               </div>
-              <div className='w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center'>
+              <div className='w-8 h-8 sm:w-12 sm:h-12 bg-blue-100 rounded-lg sm:rounded-xl flex items-center justify-center flex-shrink-0 ml-2'>
                 <svg
-                  className='w-6 h-6 text-blue-600'
+                  className='w-4 h-4 sm:w-6 sm:h-6 text-blue-600'
                   fill='none'
                   stroke='currentColor'
                   viewBox='0 0 24 24'
@@ -145,17 +149,19 @@ const Dashboard = () => {
             </div>
           </div>
 
-          <div className='card p-6'>
+          <div className='card p-3 sm:p-6'>
             <div className='flex items-center justify-between'>
-              <div>
-                <p className='text-sm text-gray-500 mb-1'>Rata-rata Skor</p>
-                <p className='text-3xl font-bold text-gray-900'>
+              <div className='min-w-0 flex-1'>
+                <p className='text-xs sm:text-sm text-gray-500 mb-0.5 sm:mb-1 truncate'>
+                  Skor
+                </p>
+                <p className='text-xl sm:text-3xl font-bold text-gray-900'>
                   {progress?.statistics?.averageScore || 0}%
                 </p>
               </div>
-              <div className='w-12 h-12 bg-purple-100 rounded-xl flex items-center justify-center'>
+              <div className='w-8 h-8 sm:w-12 sm:h-12 bg-purple-100 rounded-lg sm:rounded-xl flex items-center justify-center flex-shrink-0 ml-2'>
                 <svg
-                  className='w-6 h-6 text-purple-600'
+                  className='w-4 h-4 sm:w-6 sm:h-6 text-purple-600'
                   fill='none'
                   stroke='currentColor'
                   viewBox='0 0 24 24'
@@ -171,17 +177,19 @@ const Dashboard = () => {
             </div>
           </div>
 
-          <div className='card p-6'>
+          <div className='card p-3 sm:p-6'>
             <div className='flex items-center justify-between'>
-              <div>
-                <p className='text-sm text-gray-500 mb-1'>Progress</p>
-                <p className='text-3xl font-bold text-gray-900'>
+              <div className='min-w-0 flex-1'>
+                <p className='text-xs sm:text-sm text-gray-500 mb-0.5 sm:mb-1 truncate'>
+                  Progress
+                </p>
+                <p className='text-xl sm:text-3xl font-bold text-gray-900'>
                   {progress?.statistics?.completionPercentage || 0}%
                 </p>
               </div>
-              <div className='w-12 h-12 bg-orange-100 rounded-xl flex items-center justify-center'>
+              <div className='w-8 h-8 sm:w-12 sm:h-12 bg-orange-100 rounded-lg sm:rounded-xl flex items-center justify-center flex-shrink-0 ml-2'>
                 <svg
-                  className='w-6 h-6 text-orange-600'
+                  className='w-4 h-4 sm:w-6 sm:h-6 text-orange-600'
                   fill='none'
                   stroke='currentColor'
                   viewBox='0 0 24 24'
@@ -200,29 +208,28 @@ const Dashboard = () => {
 
         {/* Recent Progress */}
         {progress?.progress && progress.progress.length > 0 && (
-          <div className='mb-8'>
-            <div className='flex justify-between items-center mb-4'>
-              <h2 className='text-xl font-semibold text-gray-900'>
+          <div className='mb-4 sm:mb-8'>
+            <div className='flex justify-between items-center mb-3 sm:mb-4'>
+              <h2 className='text-base sm:text-xl font-semibold text-gray-900'>
                 Progress Terbaru
               </h2>
             </div>
             <div className='card divide-y divide-gray-100'>
               {progress.progress.slice(0, 5).map((item) => (
-                <div
+                <Link
                   key={item.id}
-                  className='p-4 flex items-center justify-between hover:bg-gray-50 transition-colors'
+                  to={`/lesson/${item.lesson_id}`}
+                  className='p-3 sm:p-4 flex items-center justify-between hover:bg-gray-50 transition-colors'
                 >
-                  <div className='flex items-center space-x-4'>
+                  <div className='flex items-center space-x-2 sm:space-x-4 min-w-0 flex-1'>
                     <div
-                      className={`w-10 h-10 rounded-full flex items-center justify-center ${
-                        item.status === 'completed'
-                          ? 'bg-green-100'
-                          : 'bg-blue-100'
+                      className={`w-8 h-8 sm:w-10 sm:h-10 rounded-full flex items-center justify-center flex-shrink-0 ${
+                        item.completed ? 'bg-green-100' : 'bg-blue-100'
                       }`}
                     >
-                      {item.status === 'completed' ? (
+                      {item.completed ? (
                         <svg
-                          className='w-5 h-5 text-green-600'
+                          className='w-4 h-4 sm:w-5 sm:h-5 text-green-600'
                           fill='none'
                           stroke='currentColor'
                           viewBox='0 0 24 24'
@@ -236,7 +243,7 @@ const Dashboard = () => {
                         </svg>
                       ) : (
                         <svg
-                          className='w-5 h-5 text-blue-600'
+                          className='w-4 h-4 sm:w-5 sm:h-5 text-blue-600'
                           fill='none'
                           stroke='currentColor'
                           viewBox='0 0 24 24'
@@ -250,26 +257,37 @@ const Dashboard = () => {
                         </svg>
                       )}
                     </div>
-                    <div>
-                      <p className='font-medium text-gray-900'>
+                    <div className='min-w-0 flex-1'>
+                      <p className='text-sm sm:text-base font-medium text-gray-900 truncate'>
                         {item.lesson?.title || 'Lesson'}
                       </p>
-                      <p className='text-sm text-gray-500'>
+                      <p className='text-xs sm:text-sm text-gray-500 truncate'>
                         {item.course?.title}
                       </p>
                     </div>
                   </div>
-                  <div className='text-right'>
-                    <p
-                      className={`font-semibold ${item.score >= 70 ? 'text-green-600' : 'text-orange-600'}`}
-                    >
-                      {item.score}%
-                    </p>
-                    <p className='text-xs text-gray-400'>
-                      {new Date(item.updated_at).toLocaleDateString('id-ID')}
-                    </p>
+                  <div className='text-right flex items-center gap-2 sm:gap-4 flex-shrink-0 ml-2'>
+                    <div>
+                      <p
+                        className={`text-sm sm:text-base font-semibold ${item.score >= 70 ? 'text-green-600' : 'text-orange-600'}`}
+                      >
+                        {item.score}%
+                      </p>
+                      <p className='text-[10px] sm:text-xs text-gray-400 hidden sm:block'>
+                        {item.completed_at
+                          ? new Date(item.completed_at).toLocaleDateString(
+                              'id-ID',
+                            )
+                          : 'Belum selesai'}
+                      </p>
+                    </div>
+                    {!item.completed && (
+                      <span className='text-[10px] sm:text-xs px-1.5 sm:px-2 py-0.5 sm:py-1 bg-orange-100 text-orange-700 rounded-full whitespace-nowrap'>
+                        Ulangi
+                      </span>
+                    )}
                   </div>
-                </div>
+                </Link>
               ))}
             </div>
           </div>
@@ -277,25 +295,27 @@ const Dashboard = () => {
 
         {/* Recommended Courses */}
         <div>
-          <div className='flex justify-between items-center mb-4'>
-            <h2 className='text-xl font-semibold text-gray-900'>Courses</h2>
+          <div className='flex justify-between items-center mb-3 sm:mb-4'>
+            <h2 className='text-base sm:text-xl font-semibold text-gray-900'>
+              Courses
+            </h2>
             <Link
               to='/courses'
-              className='text-primary-600 hover:text-primary-700 text-sm font-medium'
+              className='text-primary-600 hover:text-primary-700 text-xs sm:text-sm font-medium'
             >
               Lihat Semua →
             </Link>
           </div>
-          <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6'>
+          <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-6'>
             {courses.map((course) => (
               <Link
                 key={course.id}
                 to={`/course/${course.id}`}
                 className='card-hover'
               >
-                <div className='h-40 bg-gradient-to-br from-primary-500 to-primary-600 flex items-center justify-center'>
+                <div className='h-24 sm:h-40 bg-gradient-to-br from-primary-500 to-primary-600 flex items-center justify-center rounded-t-xl'>
                   <svg
-                    className='w-16 h-16 text-white/30'
+                    className='w-10 h-10 sm:w-16 sm:h-16 text-white/30'
                     fill='none'
                     stroke='currentColor'
                     viewBox='0 0 24 24'
@@ -308,19 +328,19 @@ const Dashboard = () => {
                     />
                   </svg>
                 </div>
-                <div className='p-5'>
-                  <span className='inline-block px-2 py-1 bg-primary-100 text-primary-700 text-xs font-medium rounded mb-2'>
+                <div className='p-3 sm:p-5'>
+                  <span className='inline-block px-2 py-0.5 sm:py-1 bg-primary-100 text-primary-700 text-[10px] sm:text-xs font-medium rounded mb-1 sm:mb-2'>
                     {course.category}
                   </span>
-                  <h3 className='font-semibold text-gray-900 mb-2 line-clamp-2'>
+                  <h3 className='text-sm sm:text-base font-semibold text-gray-900 mb-1 sm:mb-2 line-clamp-2'>
                     {course.title}
                   </h3>
-                  <p className='text-gray-500 text-sm line-clamp-2'>
+                  <p className='text-gray-500 text-xs sm:text-sm line-clamp-2 hidden sm:block'>
                     {course.description}
                   </p>
-                  <div className='mt-4 flex items-center text-sm text-gray-400'>
+                  <div className='mt-2 sm:mt-4 flex items-center text-xs sm:text-sm text-gray-400'>
                     <svg
-                      className='w-4 h-4 mr-1'
+                      className='w-3 h-3 sm:w-4 sm:h-4 mr-1'
                       fill='none'
                       stroke='currentColor'
                       viewBox='0 0 24 24'

@@ -1,15 +1,15 @@
 import express from 'express';
-import { v4 as uuidv4 } from 'uuid';
 import {
   getSheetData,
-  appendRow,
+  insertRow,
   updateRow,
   findByColumn,
-  findRowIndexByColumn,
   filterByColumn,
-  SHEETS,
-} from '../services/googleSheets.js';
+  TABLES,
+  supabase,
+} from '../services/supabase.js';
 import { authenticateToken } from '../middleware/auth.js';
+import { v4 as uuidv4 } from 'uuid';
 
 const router = express.Router();
 
@@ -36,7 +36,7 @@ router.post('/submit', authenticateToken, async (req, res) => {
     }
 
     // Verify lesson exists
-    const lesson = await findByColumn(SHEETS.LESSONS, 'id', lesson_id);
+    const lesson = await findByColumn(TABLES.LESSONS, 'id', lesson_id);
     if (!lesson) {
       return res.status(404).json({
         success: false,
@@ -44,92 +44,107 @@ router.post('/submit', authenticateToken, async (req, res) => {
       });
     }
 
-    // Get quiz questions for this lesson
-    const allQuizzes = await getSheetData(SHEETS.QUIZZES);
-    const quizzes = allQuizzes.filter((quiz) => quiz.lesson_id === lesson_id);
+    // Get quiz record for this lesson (contains questions JSONB array)
+    const quizRecords = await filterByColumn(
+      TABLES.QUIZZES,
+      'lesson_id',
+      lesson_id,
+    );
 
-    if (quizzes.length === 0) {
+    if (quizRecords.length === 0) {
       return res.status(400).json({
         success: false,
         message: 'No quiz questions found for this lesson',
       });
     }
 
+    // Extract questions from JSONB
+    const quizRecord = quizRecords[0];
+    const questionsData =
+      typeof quizRecord.questions === 'string'
+        ? JSON.parse(quizRecord.questions)
+        : quizRecord.questions;
+
+    if (!questionsData || questionsData.length === 0) {
+      return res.status(400).json({
+        success: false,
+        message: 'No quiz questions found for this lesson',
+      });
+    }
+
+    // Build questions map with generated IDs
+    const questionsMap = {};
+    questionsData.forEach((q, index) => {
+      const qId = `${quizRecord.id}-q${index}`;
+      questionsMap[qId] = {
+        ...q,
+        id: qId,
+      };
+    });
+
     // Calculate score
     let correctCount = 0;
     const results = [];
 
     for (const answer of answers) {
-      const quiz = quizzes.find((q) => q.id === answer.quiz_id);
-      if (quiz) {
-        const isCorrect =
-          quiz.correct_answer.toLowerCase() ===
-          answer.selected_answer.toLowerCase();
+      const question = questionsMap[answer.quiz_id];
+      if (question) {
+        // Compare selected index with correct index
+        const isCorrect = answer.selected_answer === question.correctIndex;
         if (isCorrect) {
           correctCount++;
         }
         results.push({
           quiz_id: answer.quiz_id,
-          question: quiz.question,
+          question: question.question,
           selected_answer: answer.selected_answer,
-          correct_answer: quiz.correct_answer,
+          correct_answer: question.correctIndex,
           is_correct: isCorrect,
         });
       }
     }
 
-    const score = Math.round((correctCount / quizzes.length) * 100);
-    const status = score >= 70 ? 'completed' : 'ongoing';
-    const updatedAt = new Date().toISOString();
+    const totalQuestions = questionsData.length;
+    const score = Math.round((correctCount / totalQuestions) * 100);
+    const completed = score >= 70;
 
     // Check if progress already exists
-    const allProgress = await getSheetData(SHEETS.USER_PROGRESS);
-    const existingProgress = allProgress.find(
-      (p) => p.user_id === req.user.id && p.lesson_id === lesson_id,
-    );
+    const { data: existingProgress } = await supabase
+      .from(TABLES.USER_PROGRESS)
+      .select('*')
+      .eq('user_id', req.user.id)
+      .eq('lesson_id', lesson_id)
+      .maybeSingle();
 
     if (existingProgress) {
       // Update existing progress
-      const rowIndex = await findRowIndexByColumn(
-        SHEETS.USER_PROGRESS,
-        'id',
-        existingProgress.id,
-      );
-      if (rowIndex > 0) {
-        await updateRow(SHEETS.USER_PROGRESS, rowIndex, [
-          existingProgress.id,
-          req.user.id,
-          lesson_id,
-          score.toString(),
-          status,
-          updatedAt,
-        ]);
-      }
+      await updateRow(TABLES.USER_PROGRESS, existingProgress.id, {
+        score,
+        completed,
+        completed_at: completed ? new Date().toISOString() : null,
+      });
     } else {
-      // Create new progress
-      const progressId = uuidv4();
-      await appendRow(SHEETS.USER_PROGRESS, [
-        progressId,
-        req.user.id,
+      // Create new progress with generated ID
+      await insertRow(TABLES.USER_PROGRESS, {
+        id: uuidv4(),
+        user_id: req.user.id,
         lesson_id,
-        score.toString(),
-        status,
-        updatedAt,
-      ]);
+        score,
+        completed,
+        completed_at: completed ? new Date().toISOString() : null,
+      });
     }
 
     res.json({
       success: true,
-      message:
-        status === 'completed'
-          ? 'Congratulations! You passed the quiz!'
-          : 'Keep trying! You need 70% to pass.',
+      message: completed
+        ? 'Congratulations! You passed the quiz!'
+        : 'Keep trying! You need 70% to pass.',
       data: {
         score,
-        totalQuestions: quizzes.length,
+        totalQuestions,
         correctAnswers: correctCount,
-        status,
-        passed: status === 'completed',
+        passed: completed,
         results,
       },
     });
@@ -151,7 +166,7 @@ router.get('/lesson/:lessonId', async (req, res) => {
     const { lessonId } = req.params;
 
     // Verify lesson exists
-    const lesson = await findByColumn(SHEETS.LESSONS, 'id', lessonId);
+    const lesson = await findByColumn(TABLES.LESSONS, 'id', lessonId);
     if (!lesson) {
       return res.status(404).json({
         success: false,
@@ -160,20 +175,17 @@ router.get('/lesson/:lessonId', async (req, res) => {
     }
 
     // Get quiz questions
-    const allQuizzes = await getSheetData(SHEETS.QUIZZES);
-    const quizzes = allQuizzes
-      .filter((quiz) => quiz.lesson_id === lessonId)
-      .map((quiz) => ({
-        id: quiz.id,
-        question: quiz.question,
-        options: {
-          a: quiz.option_a,
-          b: quiz.option_b,
-          c: quiz.option_c,
-          d: quiz.option_d,
-        },
-        // correct_answer is intentionally not included
-      }));
+    const allQuizzes = await filterByColumn(
+      TABLES.QUIZZES,
+      'lesson_id',
+      lessonId,
+    );
+    const quizzes = allQuizzes.map((quiz) => ({
+      id: quiz.id,
+      question: quiz.question,
+      options: quiz.options,
+      // correct_answer is intentionally not included
+    }));
 
     res.json({
       success: true,

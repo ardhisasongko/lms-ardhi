@@ -1,14 +1,9 @@
 import express from 'express';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
-import { v4 as uuidv4 } from 'uuid';
 import { body, validationResult } from 'express-validator';
-import {
-  getSheetData,
-  appendRow,
-  findByColumn,
-  SHEETS,
-} from '../services/googleSheets.js';
+import { findByColumn, insertRow, TABLES } from '../services/supabase.js';
+import crypto from 'crypto';
 import { authenticateToken } from '../middleware/auth.js';
 
 const router = express.Router();
@@ -51,7 +46,7 @@ router.post('/register', registerValidation, async (req, res) => {
     const { name, email, password, role = 'student' } = req.body;
 
     // Check if user already exists
-    const existingUser = await findByColumn(SHEETS.USERS, 'email', email);
+    const existingUser = await findByColumn(TABLES.USERS, 'email', email);
     if (existingUser) {
       return res.status(409).json({
         success: false,
@@ -63,28 +58,24 @@ router.post('/register', registerValidation, async (req, res) => {
     const saltRounds = 10;
     const passwordHash = await bcrypt.hash(password, saltRounds);
 
-    // Create user object
-    const userId = uuidv4();
-    const createdAt = new Date().toISOString();
-
     // Only allow student role for self-registration
     const userRole = ['student', 'instructor'].includes(role)
       ? role
       : 'student';
 
-    // Append user to sheet
-    await appendRow(SHEETS.USERS, [
-      userId,
-      name,
+    // Insert user to database
+    const userId = crypto.randomUUID();
+    const newUser = await insertRow(TABLES.USERS, {
+      id: userId,
+      full_name: name,
       email,
-      passwordHash,
-      userRole,
-      createdAt,
-    ]);
+      password_hash: passwordHash,
+      role: userRole,
+    });
 
     // Generate JWT token
     const token = jwt.sign(
-      { userId, email, role: userRole },
+      { userId: newUser.id, email, role: userRole },
       process.env.JWT_SECRET,
       { expiresIn: process.env.JWT_EXPIRES_IN || '7d' },
     );
@@ -94,11 +85,11 @@ router.post('/register', registerValidation, async (req, res) => {
       message: 'User registered successfully',
       data: {
         user: {
-          id: userId,
+          id: newUser.id,
           name,
           email,
           role: userRole,
-          created_at: createdAt,
+          created_at: newUser.created_at,
         },
         token,
       },
@@ -130,7 +121,7 @@ router.post('/login', loginValidation, async (req, res) => {
     const { email, password } = req.body;
 
     // Find user by email
-    const user = await findByColumn(SHEETS.USERS, 'email', email);
+    const user = await findByColumn(TABLES.USERS, 'email', email);
     if (!user) {
       return res.status(401).json({
         success: false,
@@ -160,7 +151,7 @@ router.post('/login', loginValidation, async (req, res) => {
       data: {
         user: {
           id: user.id,
-          name: user.name,
+          name: user.full_name,
           email: user.email,
           role: user.role,
           created_at: user.created_at,

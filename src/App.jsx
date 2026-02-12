@@ -13,6 +13,8 @@ import Dashboard from './pages/Dashboard';
 import Courses from './pages/Courses';
 import CourseDetail from './pages/CourseDetail';
 import Lesson from './pages/Lesson';
+import QuizPage from './pages/QuizPage';
+import QuizResults from './pages/QuizResults';
 
 function App() {
   return (
@@ -45,6 +47,22 @@ function App() {
               element={
                 <ProtectedRoute>
                   <Lesson />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path='quiz/:lessonId'
+              element={
+                <ProtectedRoute>
+                  <QuizPage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path='quiz-results/:lessonId'
+              element={
+                <ProtectedRoute>
+                  <QuizResults />
                 </ProtectedRoute>
               }
             />

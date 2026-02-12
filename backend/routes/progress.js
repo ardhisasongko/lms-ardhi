@@ -2,8 +2,9 @@ import express from 'express';
 import {
   getSheetData,
   findByColumn,
-  SHEETS,
-} from '../services/googleSheets.js';
+  filterByColumn,
+  TABLES,
+} from '../services/supabase.js';
 import { authenticateToken } from '../middleware/auth.js';
 
 const router = express.Router();
@@ -25,13 +26,16 @@ router.get('/:userId', authenticateToken, async (req, res) => {
     }
 
     // Get all progress for user
-    const allProgress = await getSheetData(SHEETS.USER_PROGRESS);
-    const userProgress = allProgress.filter((p) => p.user_id === userId);
+    const userProgress = await filterByColumn(
+      TABLES.USER_PROGRESS,
+      'user_id',
+      userId,
+    );
 
     // Enrich with lesson and course info
-    const lessons = await getSheetData(SHEETS.LESSONS);
-    const modules = await getSheetData(SHEETS.MODULES);
-    const courses = await getSheetData(SHEETS.COURSES);
+    const lessons = await getSheetData(TABLES.LESSONS);
+    const modules = await getSheetData(TABLES.MODULES);
+    const courses = await getSheetData(TABLES.COURSES);
 
     const enrichedProgress = userProgress.map((progress) => {
       const lesson = lessons.find((l) => l.id === progress.lesson_id);
@@ -56,7 +60,7 @@ router.get('/:userId', authenticateToken, async (req, res) => {
     // Calculate overall statistics
     const totalLessons = lessons.length;
     const completedLessons = userProgress.filter(
-      (p) => p.status === 'completed',
+      (p) => p.completed === true,
     ).length;
     const averageScore =
       userProgress.length > 0
@@ -78,7 +82,7 @@ router.get('/:userId', authenticateToken, async (req, res) => {
               ? Math.round((completedLessons / totalLessons) * 100)
               : 0,
           averageScore,
-          inProgressCount: userProgress.filter((p) => p.status === 'ongoing')
+          inProgressCount: userProgress.filter((p) => p.completed === false)
             .length,
         },
       },
@@ -101,7 +105,7 @@ router.get('/course/:courseId', authenticateToken, async (req, res) => {
     const { courseId } = req.params;
 
     // Verify course exists
-    const course = await findByColumn(SHEETS.COURSES, 'id', courseId);
+    const course = await findByColumn(TABLES.COURSES, 'id', courseId);
     if (!course) {
       return res.status(404).json({
         success: false,
@@ -110,21 +114,26 @@ router.get('/course/:courseId', authenticateToken, async (req, res) => {
     }
 
     // Get modules for this course
-    const allModules = await getSheetData(SHEETS.MODULES);
-    const courseModules = allModules.filter((m) => m.course_id === courseId);
+    const courseModules = await filterByColumn(
+      TABLES.MODULES,
+      'course_id',
+      courseId,
+    );
 
     // Get lessons for these modules
-    const allLessons = await getSheetData(SHEETS.LESSONS);
+    const allLessons = await getSheetData(TABLES.LESSONS);
     const courseLessons = allLessons.filter((l) =>
       courseModules.some((m) => m.id === l.module_id),
     );
 
     // Get user progress for these lessons
-    const allProgress = await getSheetData(SHEETS.USER_PROGRESS);
-    const userProgress = allProgress.filter(
-      (p) =>
-        p.user_id === req.user.id &&
-        courseLessons.some((l) => l.id === p.lesson_id),
+    const userProgressAll = await filterByColumn(
+      TABLES.USER_PROGRESS,
+      'user_id',
+      req.user.id,
+    );
+    const userProgress = userProgressAll.filter((p) =>
+      courseLessons.some((l) => l.id === p.lesson_id),
     );
 
     // Build progress map
@@ -132,35 +141,35 @@ router.get('/course/:courseId', authenticateToken, async (req, res) => {
     userProgress.forEach((p) => {
       progressMap[p.lesson_id] = {
         score: parseInt(p.score || 0),
-        status: p.status,
-        updated_at: p.updated_at,
+        completed: p.completed,
+        completed_at: p.completed_at,
       };
     });
 
     // Build module progress
     const moduleProgress = courseModules
-      .sort((a, b) => parseInt(a.order) - parseInt(b.order))
+      .sort((a, b) => parseInt(a.order_index) - parseInt(b.order_index))
       .map((module) => {
         const moduleLessons = courseLessons
           .filter((l) => l.module_id === module.id)
-          .sort((a, b) => parseInt(a.order) - parseInt(b.order))
+          .sort((a, b) => parseInt(a.order_index) - parseInt(b.order_index))
           .map((lesson) => ({
             id: lesson.id,
             title: lesson.title,
             progress: progressMap[lesson.id] || {
-              status: 'not_started',
+              completed: false,
               score: 0,
             },
           }));
 
         const completedCount = moduleLessons.filter(
-          (l) => l.progress.status === 'completed',
+          (l) => l.progress.completed === true,
         ).length;
 
         return {
           id: module.id,
           title: module.title,
-          order: module.order,
+          order_index: module.order_index,
           lessons: moduleLessons,
           completedLessons: completedCount,
           totalLessons: moduleLessons.length,
@@ -171,7 +180,7 @@ router.get('/course/:courseId', authenticateToken, async (req, res) => {
 
     const totalLessons = courseLessons.length;
     const completedLessons = userProgress.filter(
-      (p) => p.status === 'completed',
+      (p) => p.completed === true,
     ).length;
 
     res.json({

@@ -33,7 +33,7 @@ const Navbar = () => {
                 />
               </svg>
             </div>
-            <span className='text-xl font-bold text-gradient'>LMS Ardhi</span>
+            <span className='text-xl font-bold text-gradient'>TKA Master</span>
           </Link>
 
           {/* Desktop Navigation */}
@@ -42,7 +42,7 @@ const Navbar = () => {
               to='/courses'
               className='text-gray-600 hover:text-primary-600 transition-colors'
             >
-              Courses
+              Materi TKA
             </Link>
 
             {isAuthenticated ? (
@@ -95,7 +95,7 @@ const Navbar = () => {
                   Login
                 </Link>
                 <Link to='/register' className='btn-accent'>
-                  Get Started
+                  Mulai Latihan
                 </Link>
               </div>
             )}
@@ -140,7 +140,7 @@ const Navbar = () => {
                 className='text-gray-600 hover:text-primary-600 transition-colors'
                 onClick={() => setMobileMenuOpen(false)}
               >
-                Courses
+                Materi TKA
               </Link>
 
               {isAuthenticated ? (
@@ -176,7 +176,7 @@ const Navbar = () => {
                     className='btn-primary text-center'
                     onClick={() => setMobileMenuOpen(false)}
                   >
-                    Get Started
+                    Mulai Latihan
                   </Link>
                 </>
               )}

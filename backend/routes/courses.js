@@ -1,13 +1,12 @@
 import express from 'express';
-import { v4 as uuidv4 } from 'uuid';
 import { body, validationResult } from 'express-validator';
 import {
   getSheetData,
-  appendRow,
+  insertRow,
   findByColumn,
   filterByColumn,
-  SHEETS,
-} from '../services/googleSheets.js';
+  TABLES,
+} from '../services/supabase.js';
 import {
   authenticateToken,
   authorizeRoles,
@@ -31,7 +30,7 @@ router.get('/', optionalAuth, async (req, res) => {
   try {
     const { page = 1, limit = 10, category } = req.query;
 
-    let courses = await getSheetData(SHEETS.COURSES);
+    let courses = await getSheetData(TABLES.COURSES);
 
     // Filter by category if provided
     if (category) {
@@ -46,7 +45,7 @@ router.get('/', optionalAuth, async (req, res) => {
     const paginatedCourses = courses.slice(startIndex, endIndex);
 
     // Get module count for each course
-    const modules = await getSheetData(SHEETS.MODULES);
+    const modules = await getSheetData(TABLES.MODULES);
     const coursesWithModules = paginatedCourses.map((course) => ({
       ...course,
       moduleCount: modules.filter((m) => m.course_id === course.id).length,
@@ -79,7 +78,7 @@ router.get('/', optionalAuth, async (req, res) => {
  */
 router.get('/categories', async (req, res) => {
   try {
-    const courses = await getSheetData(SHEETS.COURSES);
+    const courses = await getSheetData(TABLES.COURSES);
     const categories = [...new Set(courses.map((course) => course.category))];
 
     res.json({
@@ -104,7 +103,7 @@ router.get('/:id', optionalAuth, async (req, res) => {
     const { id } = req.params;
 
     // Get course
-    const course = await findByColumn(SHEETS.COURSES, 'id', id);
+    const course = await findByColumn(TABLES.COURSES, 'id', id);
     if (!course) {
       return res.status(404).json({
         success: false,
@@ -113,24 +112,24 @@ router.get('/:id', optionalAuth, async (req, res) => {
     }
 
     // Get modules for this course
-    const allModules = await getSheetData(SHEETS.MODULES);
+    const allModules = await getSheetData(TABLES.MODULES);
     const modules = allModules
       .filter((module) => module.course_id === id)
-      .sort((a, b) => parseInt(a.order) - parseInt(b.order));
+      .sort((a, b) => parseInt(a.order_index) - parseInt(b.order_index));
 
     // Get lessons for each module
-    const allLessons = await getSheetData(SHEETS.LESSONS);
+    const allLessons = await getSheetData(TABLES.LESSONS);
     const modulesWithLessons = modules.map((module) => ({
       ...module,
       lessons: allLessons
         .filter((lesson) => lesson.module_id === module.id)
-        .sort((a, b) => parseInt(a.order) - parseInt(b.order)),
+        .sort((a, b) => parseInt(a.order_index) - parseInt(b.order_index)),
     }));
 
     // Get user progress if authenticated
     let userProgress = [];
     if (req.user) {
-      const allProgress = await getSheetData(SHEETS.USER_PROGRESS);
+      const allProgress = await getSheetData(TABLES.USER_PROGRESS);
       userProgress = allProgress.filter((p) => p.user_id === req.user.id);
     }
 
@@ -173,32 +172,19 @@ router.post(
       }
 
       const { title, description, category, thumbnail = '' } = req.body;
-      const courseId = uuidv4();
-      const createdAt = new Date().toISOString();
 
-      await appendRow(SHEETS.COURSES, [
-        courseId,
+      const newCourse = await insertRow(TABLES.COURSES, {
         title,
         description,
-        category,
         thumbnail,
-        req.user.id,
-        createdAt,
-      ]);
+        instructor_id: req.user.id,
+      });
 
       res.status(201).json({
         success: true,
         message: 'Course created successfully',
         data: {
-          course: {
-            id: courseId,
-            title,
-            description,
-            category,
-            thumbnail,
-            instructor_id: req.user.id,
-            created_at: createdAt,
-          },
+          course: newCourse,
         },
       });
     } catch (error) {
@@ -232,7 +218,7 @@ router.post(
       }
 
       // Verify course exists
-      const course = await findByColumn(SHEETS.COURSES, 'id', id);
+      const course = await findByColumn(TABLES.COURSES, 'id', id);
       if (!course) {
         return res.status(404).json({
           success: false,
@@ -240,20 +226,17 @@ router.post(
         });
       }
 
-      const moduleId = uuidv4();
-
-      await appendRow(SHEETS.MODULES, [moduleId, id, title, order || 1]);
+      const newModule = await insertRow(TABLES.MODULES, {
+        course_id: id,
+        title,
+        order_index: order || 1,
+      });
 
       res.status(201).json({
         success: true,
         message: 'Module added successfully',
         data: {
-          module: {
-            id: moduleId,
-            course_id: id,
-            title,
-            order: order || 1,
-          },
+          module: newModule,
         },
       });
     } catch (error) {

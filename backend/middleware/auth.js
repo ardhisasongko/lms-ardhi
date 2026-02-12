@@ -1,5 +1,5 @@
 import jwt from 'jsonwebtoken';
-import { findByColumn, SHEETS } from '../services/googleSheets.js';
+import { findByColumn, TABLES } from '../services/supabase.js';
 
 /**
  * Middleware to verify JWT token
@@ -19,7 +19,7 @@ export const authenticateToken = async (req, res, next) => {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
     // Fetch user from database to ensure they still exist
-    const user = await findByColumn(SHEETS.USERS, 'id', decoded.userId);
+    const user = await findByColumn(TABLES.USERS, 'id', decoded.userId);
 
     if (!user) {
       return res.status(401).json({
@@ -83,7 +83,7 @@ export const optionalAuth = async (req, res, next) => {
 
     if (token) {
       const decoded = jwt.verify(token, process.env.JWT_SECRET);
-      const user = await findByColumn(SHEETS.USERS, 'id', decoded.userId);
+      const user = await findByColumn(TABLES.USERS, 'id', decoded.userId);
 
       if (user) {
         delete user.password_hash;

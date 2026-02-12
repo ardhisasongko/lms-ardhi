@@ -28,18 +28,18 @@ const Landing = () => {
               <div className='inline-block px-4 py-2 bg-white/80 backdrop-blur rounded-full shadow-sm mb-6'>
                 <span className='text-sm font-medium'>
                   <span className='text-secondary-600'>✨ Platform</span>
-                  <span className='text-gray-600'> Pembelajaran Modern</span>
+                  <span className='text-gray-600'> Persiapan TKA Terbaik</span>
                 </span>
               </div>
 
               <h1 className='text-4xl lg:text-6xl font-bold text-gray-900 leading-tight mb-6'>
-                Belajar Lebih Cerdas dengan{' '}
-                <span className='text-gradient'>LMS Ardhi</span>
+                Raih Skor Tinggi TKA dengan{' '}
+                <span className='text-gradient'>TKA Master</span>
               </h1>
               <p className='text-lg text-gray-600 mb-8 max-w-xl mx-auto lg:mx-0'>
-                Platform pembelajaran modern dengan video interaktif, quiz yang
-                menantang, dan tracking progress untuk membantu Anda mencapai
-                tujuan belajar.
+                Platform persiapan Tes Kemampuan Akademik (TKA) dengan video
+                pembelajaran, latihan soal interaktif, dan tracking progress
+                untuk membantu Anda lolos seleksi PTN impian.
               </p>
               <div className='flex flex-col sm:flex-row gap-4 justify-center lg:justify-start'>
                 {isAuthenticated ? (
@@ -55,13 +55,13 @@ const Landing = () => {
                       to='/register'
                       className='btn-accent text-lg px-8 py-3'
                     >
-                      🚀 Mulai Belajar Gratis
+                      🚀 Mulai Latihan Gratis
                     </Link>
                     <Link
                       to='/courses'
                       className='btn-outline text-lg px-8 py-3'
                     >
-                      Lihat Courses
+                      Lihat Materi TKA
                     </Link>
                   </>
                 )}
@@ -76,7 +76,7 @@ const Landing = () => {
               >
                 <div className='flex items-center gap-2'>
                   <span className='text-2xl'>📚</span>
-                  <span className='font-semibold'>100+ Courses</span>
+                  <span className='font-semibold'>5 Subtes TKA</span>
                 </div>
               </div>
 
@@ -86,7 +86,7 @@ const Landing = () => {
               >
                 <div className='flex items-center gap-2'>
                   <span className='text-2xl'>🎯</span>
-                  <span className='font-semibold'>Quiz Interaktif</span>
+                  <span className='font-semibold'>Latihan Soal</span>
                 </div>
               </div>
 
@@ -107,7 +107,7 @@ const Landing = () => {
                             </svg>
                           </div>
                           <p className='text-gray-600 font-medium'>
-                            Video pembelajaran berkualitas
+                            Video pembahasan soal TKA
                           </p>
                         </div>
                       </div>
@@ -141,11 +141,11 @@ const Landing = () => {
             </span>
             <h2 className='text-3xl lg:text-4xl font-bold text-gray-900 mb-4'>
               Semua yang Anda Butuhkan untuk{' '}
-              <span className='text-gradient-primary'>Belajar</span>
+              <span className='text-gradient-primary'>Lolos TKA</span>
             </h2>
             <p className='text-gray-600 max-w-2xl mx-auto'>
-              Platform kami dirancang untuk memberikan pengalaman belajar
-              terbaik dengan fitur-fitur modern
+              Platform kami dirancang untuk mempersiapkan Anda menghadapi Tes
+              Kemampuan Akademik dengan materi lengkap dan terstruktur
             </p>
           </div>
 
@@ -168,11 +168,11 @@ const Landing = () => {
                 </svg>
               </div>
               <h3 className='text-xl font-semibold text-gray-900 mb-3'>
-                Video YouTube Embed
+                Video Pembahasan
               </h3>
               <p className='text-gray-600'>
-                Tonton video pembelajaran langsung dari YouTube dengan player
-                yang terintegrasi
+                Tonton video pembahasan soal TKA dari tutor berpengalaman dengan
+                penjelasan detail
               </p>
             </div>
 
@@ -194,11 +194,11 @@ const Landing = () => {
                 </svg>
               </div>
               <h3 className='text-xl font-semibold text-gray-900 mb-3'>
-                Quiz Interaktif
+                Latihan Soal TKA
               </h3>
               <p className='text-gray-600'>
-                Uji pemahaman dengan quiz di setiap lesson dan lihat skor Anda
-                secara real-time
+                Uji kemampuan dengan latihan soal TKA dan lihat skor Anda secara
+                real-time
               </p>
             </div>
 
@@ -223,8 +223,8 @@ const Landing = () => {
                 Progress Tracking
               </h3>
               <p className='text-gray-600'>
-                Pantau kemajuan belajar Anda dengan dashboard yang informatif
-                dan mudah dipahami
+                Pantau kemajuan persiapan TKA Anda dengan dashboard yang
+                informatif dan mudah dipahami
               </p>
             </div>
           </div>
@@ -246,27 +246,29 @@ const Landing = () => {
           <div className='grid grid-cols-2 md:grid-cols-4 gap-8 text-center'>
             <div className='group'>
               <div className='text-4xl lg:text-5xl font-bold text-white mb-2 group-hover:scale-110 transition-transform'>
-                100+
+                5+
               </div>
-              <div className='text-primary-100 font-medium'>Courses</div>
+              <div className='text-primary-100 font-medium'>Subtes TKA</div>
             </div>
             <div className='group'>
               <div className='text-4xl lg:text-5xl font-bold text-white mb-2 group-hover:scale-110 transition-transform'>
-                500+
+                100+
               </div>
-              <div className='text-primary-100 font-medium'>Video Lessons</div>
+              <div className='text-primary-100 font-medium'>
+                Video Pembahasan
+              </div>
             </div>
             <div className='group'>
               <div className='text-4xl lg:text-5xl font-bold text-white mb-2 group-hover:scale-110 transition-transform'>
                 1000+
               </div>
-              <div className='text-primary-100 font-medium'>Quiz Questions</div>
+              <div className='text-primary-100 font-medium'>Soal Latihan</div>
             </div>
             <div className='group'>
               <div className='text-4xl lg:text-5xl font-bold text-white mb-2 group-hover:scale-110 transition-transform'>
                 5000+
               </div>
-              <div className='text-primary-100 font-medium'>Students</div>
+              <div className='text-primary-100 font-medium'>Peserta</div>
             </div>
           </div>
         </div>
@@ -295,7 +297,7 @@ const Landing = () => {
                 Daftar Gratis
               </h3>
               <p className='text-gray-600'>
-                Buat akun dalam hitungan detik dan mulai eksplorasi courses
+                Buat akun dalam hitungan detik dan mulai eksplorasi materi TKA
               </p>
               {/* Connector Line */}
               <div className='hidden md:block absolute top-8 left-1/2 w-full h-0.5 bg-gradient-to-r from-primary-300 to-secondary-300' />
@@ -307,10 +309,10 @@ const Landing = () => {
                 2
               </div>
               <h3 className='text-xl font-semibold text-gray-900 mb-3'>
-                Pilih Course
+                Pilih Subtes
               </h3>
               <p className='text-gray-600'>
-                Temukan course yang sesuai dengan minat dan tujuan Anda
+                Temukan subtes TKA yang ingin Anda kuasai lebih dalam
               </p>
               <div className='hidden md:block absolute top-8 left-1/2 w-full h-0.5 bg-gradient-to-r from-secondary-300 to-accent-300' />
             </div>
@@ -321,10 +323,10 @@ const Landing = () => {
                 3
               </div>
               <h3 className='text-xl font-semibold text-gray-900 mb-3'>
-                Mulai Belajar
+                Mulai Latihan
               </h3>
               <p className='text-gray-600'>
-                Tonton video, selesaikan quiz, dan pantau progress Anda
+                Tonton video, selesaikan latihan soal, dan pantau progress Anda
               </p>
             </div>
           </div>
@@ -339,17 +341,17 @@ const Landing = () => {
           <div className='inline-block p-1 bg-gradient-to-r from-primary-500 via-secondary-500 to-accent-500 rounded-2xl mb-8'>
             <div className='bg-white px-6 py-3 rounded-xl'>
               <span className='text-transparent bg-clip-text bg-gradient-to-r from-primary-600 via-secondary-500 to-accent-500 font-semibold'>
-                🎉 Mulai perjalanan belajarmu hari ini!
+                🎉 Raih PTN impianmu hari ini!
               </span>
             </div>
           </div>
 
           <h2 className='text-3xl lg:text-4xl font-bold text-gray-900 mb-4'>
-            Siap Untuk Mulai Belajar?
+            Siap Untuk Taklukkan TKA?
           </h2>
           <p className='text-gray-600 max-w-xl mx-auto mb-8'>
-            Daftar sekarang dan akses semua materi pembelajaran secara gratis.
-            Bergabung dengan ribuan pelajar lainnya!
+            Daftar sekarang dan akses semua materi persiapan TKA secara gratis.
+            Bergabung dengan ribuan peserta lainnya!
           </p>
           {!isAuthenticated && (
             <div className='flex flex-col sm:flex-row gap-4 justify-center'>
@@ -357,7 +359,7 @@ const Landing = () => {
                 🚀 Daftar Sekarang - Gratis!
               </Link>
               <Link to='/courses' className='btn-outline text-lg px-8 py-3'>
-                Jelajahi Courses
+                Jelajahi Materi TKA
               </Link>
             </div>
           )}

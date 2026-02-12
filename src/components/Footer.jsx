@@ -23,12 +23,11 @@ const Footer = () => {
                   />
                 </svg>
               </div>
-              <span className='text-xl font-bold text-white'>LMS Ardhi</span>
+              <span className='text-xl font-bold text-white'>TKA Master</span>
             </Link>
             <p className='text-gray-400 text-sm max-w-md'>
-              Platform pembelajaran modern (BAHASA INGGRIS & CODING) untuk
-              meningkatkan skill dan pengetahuan Anda. Belajar kapan saja, di
-              mana saja.
+              Platform persiapan Tes Kemampuan Akademik (TKA) untuk membantu
+              Anda lolos seleksi PTN impian. Belajar kapan saja, di mana saja.
             </p>
             {/* Social Icons */}
             <div className='flex space-x-4 mt-4'>
@@ -80,7 +79,7 @@ const Footer = () => {
                   to='/courses'
                   className='text-gray-400 hover:text-primary-400 text-sm transition-colors'
                 >
-                  Courses
+                  Materi TKA
                 </Link>
               </li>
               <li>
@@ -137,12 +136,12 @@ const Footer = () => {
         <div className='border-t border-gray-800 mt-8 pt-8'>
           <div className='flex flex-col md:flex-row justify-between items-center'>
             <p className='text-gray-500 text-sm'>
-              © {new Date().getFullYear()} LMS Ardhi. All rights reserved.
+              © {new Date().getFullYear()} TKA Master. All rights reserved.
             </p>
             <div className='flex items-center space-x-2 mt-4 md:mt-0'>
               <span className='text-gray-500 text-sm'>Made with</span>
               <span className='text-accent-500'>❤</span>
-              <span className='text-gray-500 text-sm'>for learners</span>
+              <span className='text-gray-500 text-sm'>for future scholars</span>
             </div>
           </div>
         </div>

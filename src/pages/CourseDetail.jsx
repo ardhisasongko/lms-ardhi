@@ -71,14 +71,14 @@ const CourseDetail = () => {
   };
 
   const getCompletedLessons = () => {
-    return userProgress.filter((p) => p.status === 'completed').length;
+    return userProgress.filter((p) => p.completed === true).length;
   };
 
   if (loading) {
     return (
       <div className='page-container py-12'>
         <div className='container-main'>
-          <Loading size='lg' text='Memuat course...' />
+          <Loading size='lg' text='Memuat materi...' />
         </div>
       </div>
     );
@@ -102,11 +102,11 @@ const CourseDetail = () => {
             />
           </svg>
           <h2 className='text-xl font-semibold text-gray-900 mb-2'>
-            Course tidak ditemukan
+            Materi tidak ditemukan
           </h2>
           <p className='text-gray-500 mb-4'>{error}</p>
           <Link to='/courses' className='btn-primary'>
-            Kembali ke Courses
+            Kembali ke Materi TKA
           </Link>
         </div>
       </div>
@@ -119,14 +119,14 @@ const CourseDetail = () => {
       : 0;
 
   return (
-    <div className='page-container py-8'>
-      <div className='container-main'>
+    <div className='page-container py-4 sm:py-8'>
+      <div className='container-main px-3 sm:px-4'>
         {/* Demo Mode Banner */}
         {isDemo && (
-          <div className='mb-6 p-4 bg-blue-50 border border-blue-200 rounded-lg text-blue-700'>
+          <div className='mb-4 sm:mb-6 p-3 sm:p-4 bg-blue-50 border border-blue-200 rounded-lg text-blue-700'>
             <div className='flex items-center'>
               <svg
-                className='w-5 h-5 mr-2'
+                className='w-4 h-4 sm:w-5 sm:h-5 mr-2 flex-shrink-0'
                 fill='none'
                 stroke='currentColor'
                 viewBox='0 0 24 24'
@@ -138,21 +138,21 @@ const CourseDetail = () => {
                   d='M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z'
                 />
               </svg>
-              <span>
-                <strong>Mode Demo:</strong> Menampilkan data contoh dengan video
-                YouTube. Login untuk melacak progress.
+              <span className='text-xs sm:text-sm'>
+                <strong>Mode Demo:</strong> Data contoh dengan video. Login
+                untuk tracking.
               </span>
             </div>
           </div>
         )}
 
         {/* Breadcrumb */}
-        <nav className='flex items-center space-x-2 text-sm text-gray-500 mb-6'>
+        <nav className='flex items-center space-x-1 sm:space-x-2 text-xs sm:text-sm text-gray-500 mb-4 sm:mb-6'>
           <Link to='/courses' className='hover:text-primary-600'>
-            Courses
+            Materi
           </Link>
           <svg
-            className='w-4 h-4'
+            className='w-3 h-3 sm:w-4 sm:h-4'
             fill='none'
             stroke='currentColor'
             viewBox='0 0 24 24'
@@ -164,26 +164,28 @@ const CourseDetail = () => {
               d='M9 5l7 7-7 7'
             />
           </svg>
-          <span className='text-gray-900'>{course.title}</span>
+          <span className='text-gray-900 truncate'>{course.title}</span>
         </nav>
 
-        <div className='grid lg:grid-cols-3 gap-8'>
+        <div className='grid lg:grid-cols-3 gap-4 sm:gap-8'>
           {/* Main Content */}
           <div className='lg:col-span-2'>
             {/* Course Header */}
-            <div className='card p-8 mb-6'>
-              <span className='inline-block px-3 py-1 bg-primary-100 text-primary-700 text-sm font-medium rounded-full mb-4'>
+            <div className='card p-4 sm:p-8 mb-4 sm:mb-6'>
+              <span className='inline-block px-2 sm:px-3 py-0.5 sm:py-1 bg-primary-100 text-primary-700 text-xs sm:text-sm font-medium rounded-full mb-3 sm:mb-4'>
                 {course.category}
               </span>
-              <h1 className='text-3xl font-bold text-gray-900 mb-4'>
+              <h1 className='text-xl sm:text-3xl font-bold text-gray-900 mb-2 sm:mb-4'>
                 {course.title}
               </h1>
-              <p className='text-gray-600 text-lg mb-6'>{course.description}</p>
+              <p className='text-gray-600 text-sm sm:text-lg mb-4 sm:mb-6'>
+                {course.description}
+              </p>
 
               {/* Progress Bar */}
               {isAuthenticated && (
-                <div className='bg-gray-100 rounded-lg p-4'>
-                  <div className='flex justify-between text-sm mb-2'>
+                <div className='bg-gray-100 rounded-lg p-3 sm:p-4'>
+                  <div className='flex justify-between text-xs sm:text-sm mb-2'>
                     <span className='text-gray-600'>Progress Anda</span>
                     <span className='font-medium text-gray-900'>
                       {progressPercentage}%
@@ -196,23 +198,22 @@ const CourseDetail = () => {
                     />
                   </div>
                   <p className='text-xs text-gray-500 mt-2'>
-                    {getCompletedLessons()} dari {getTotalLessons()} lessons
-                    selesai
+                    {getCompletedLessons()} / {getTotalLessons()} selesai
                   </p>
                 </div>
               )}
             </div>
 
             {/* Modules */}
-            <div className='space-y-4'>
-              <h2 className='text-xl font-semibold text-gray-900 mb-4'>
+            <div className='space-y-3 sm:space-y-4'>
+              <h2 className='text-lg sm:text-xl font-semibold text-gray-900 mb-3 sm:mb-4'>
                 Materi Pembelajaran
               </h2>
 
               {course.modules?.length === 0 ? (
-                <div className='card p-8 text-center'>
-                  <p className='text-gray-500'>
-                    Belum ada materi untuk course ini
+                <div className='card p-6 sm:p-8 text-center'>
+                  <p className='text-gray-500 text-sm'>
+                    Belum ada materi untuk subtes ini
                   </p>
                 </div>
               ) : (
@@ -220,23 +221,23 @@ const CourseDetail = () => {
                   <div key={module.id} className='card overflow-hidden'>
                     <button
                       onClick={() => toggleModule(module.id)}
-                      className='w-full p-5 flex items-center justify-between hover:bg-gray-50 transition-colors'
+                      className='w-full p-3 sm:p-5 flex items-center justify-between hover:bg-gray-50 transition-colors'
                     >
-                      <div className='flex items-center space-x-4'>
-                        <div className='w-10 h-10 bg-primary-100 rounded-lg flex items-center justify-center text-primary-600 font-semibold'>
+                      <div className='flex items-center space-x-2 sm:space-x-4'>
+                        <div className='w-8 h-8 sm:w-10 sm:h-10 bg-primary-100 rounded-lg flex items-center justify-center text-primary-600 font-semibold text-sm sm:text-base'>
                           {moduleIndex + 1}
                         </div>
                         <div className='text-left'>
-                          <h3 className='font-semibold text-gray-900'>
+                          <h3 className='font-semibold text-gray-900 text-sm sm:text-base'>
                             {module.title}
                           </h3>
-                          <p className='text-sm text-gray-500'>
+                          <p className='text-xs sm:text-sm text-gray-500'>
                             {module.lessons?.length || 0} lessons
                           </p>
                         </div>
                       </div>
                       <svg
-                        className={`w-5 h-5 text-gray-400 transition-transform ${expandedModules[module.id] ? 'rotate-180' : ''}`}
+                        className={`w-4 h-4 sm:w-5 sm:h-5 text-gray-400 transition-transform ${expandedModules[module.id] ? 'rotate-180' : ''}`}
                         fill='none'
                         stroke='currentColor'
                         viewBox='0 0 24 24'
@@ -253,15 +254,14 @@ const CourseDetail = () => {
                     {expandedModules[module.id] && (
                       <div className='border-t border-gray-100'>
                         {module.lessons?.length === 0 ? (
-                          <p className='p-5 text-gray-500 text-sm'>
+                          <p className='p-3 sm:p-5 text-gray-500 text-xs sm:text-sm'>
                             Belum ada lesson
                           </p>
                         ) : (
                           module.lessons?.map((lesson, lessonIndex) => {
                             const progress = getLessonProgress(lesson.id);
-                            const isCompleted =
-                              progress?.status === 'completed';
-                            const isOngoing = progress?.status === 'ongoing';
+                            const isCompleted = progress?.completed === true;
+                            const isOngoing = progress && !progress.completed;
 
                             return (
                               <Link
@@ -271,11 +271,11 @@ const CourseDetail = () => {
                                     ? `/lesson/${lesson.id}`
                                     : '/login'
                                 }
-                                className='flex items-center justify-between p-5 hover:bg-gray-50 transition-colors border-b border-gray-50 last:border-b-0'
+                                className='flex items-center justify-between p-3 sm:p-5 hover:bg-gray-50 transition-colors border-b border-gray-50 last:border-b-0'
                               >
-                                <div className='flex items-center space-x-4'>
+                                <div className='flex items-center space-x-2 sm:space-x-4 min-w-0 flex-1'>
                                   <div
-                                    className={`w-8 h-8 rounded-full flex items-center justify-center ${
+                                    className={`w-6 h-6 sm:w-8 sm:h-8 rounded-full flex items-center justify-center flex-shrink-0 ${
                                       isCompleted
                                         ? 'bg-green-100 text-green-600'
                                         : isOngoing
@@ -285,7 +285,7 @@ const CourseDetail = () => {
                                   >
                                     {isCompleted ? (
                                       <svg
-                                        className='w-4 h-4'
+                                        className='w-3 h-3 sm:w-4 sm:h-4'
                                         fill='none'
                                         stroke='currentColor'
                                         viewBox='0 0 24 24'
@@ -298,13 +298,13 @@ const CourseDetail = () => {
                                         />
                                       </svg>
                                     ) : (
-                                      <span className='text-sm font-medium'>
+                                      <span className='text-xs sm:text-sm font-medium'>
                                         {lessonIndex + 1}
                                       </span>
                                     )}
                                   </div>
-                                  <div>
-                                    <p className='font-medium text-gray-900'>
+                                  <div className='min-w-0 flex-1'>
+                                    <p className='font-medium text-gray-900 text-xs sm:text-base truncate'>
                                       {lesson.title}
                                     </p>
                                     {progress?.score !== undefined && (
@@ -314,9 +314,9 @@ const CourseDetail = () => {
                                     )}
                                   </div>
                                 </div>
-                                <div className='flex items-center space-x-3'>
+                                <div className='flex items-center space-x-2 sm:space-x-3 flex-shrink-0'>
                                   <svg
-                                    className='w-5 h-5 text-gray-400'
+                                    className='w-4 h-4 sm:w-5 sm:h-5 text-gray-400'
                                     fill='none'
                                     stroke='currentColor'
                                     viewBox='0 0 24 24'
@@ -335,7 +335,7 @@ const CourseDetail = () => {
                                     />
                                   </svg>
                                   <svg
-                                    className='w-5 h-5 text-gray-400'
+                                    className='w-4 h-4 sm:w-5 sm:h-5 text-gray-400 hidden sm:block'
                                     fill='none'
                                     stroke='currentColor'
                                     viewBox='0 0 24 24'
@@ -360,15 +360,17 @@ const CourseDetail = () => {
             </div>
           </div>
 
-          {/* Sidebar */}
-          <div className='lg:col-span-1'>
-            <div className='card p-6 sticky top-24'>
-              <h3 className='font-semibold text-gray-900 mb-4'>Info Course</h3>
+          {/* Sidebar - Hidden on mobile */}
+          <div className='hidden lg:block lg:col-span-1'>
+            <div className='card p-4 sm:p-6 sticky top-24'>
+              <h3 className='font-semibold text-gray-900 mb-3 sm:mb-4 text-sm sm:text-base'>
+                Info Course
+              </h3>
 
-              <div className='space-y-4'>
-                <div className='flex items-center text-gray-600'>
+              <div className='space-y-3 sm:space-y-4'>
+                <div className='flex items-center text-gray-600 text-sm'>
                   <svg
-                    className='w-5 h-5 mr-3 text-gray-400'
+                    className='w-4 h-4 sm:w-5 sm:h-5 mr-2 sm:mr-3 text-gray-400'
                     fill='none'
                     stroke='currentColor'
                     viewBox='0 0 24 24'
@@ -383,9 +385,9 @@ const CourseDetail = () => {
                   {course.modules?.length || 0} Modules
                 </div>
 
-                <div className='flex items-center text-gray-600'>
+                <div className='flex items-center text-gray-600 text-sm'>
                   <svg
-                    className='w-5 h-5 mr-3 text-gray-400'
+                    className='w-4 h-4 sm:w-5 sm:h-5 mr-2 sm:mr-3 text-gray-400'
                     fill='none'
                     stroke='currentColor'
                     viewBox='0 0 24 24'
@@ -400,9 +402,9 @@ const CourseDetail = () => {
                   {getTotalLessons()} Video Lessons
                 </div>
 
-                <div className='flex items-center text-gray-600'>
+                <div className='flex items-center text-gray-600 text-sm'>
                   <svg
-                    className='w-5 h-5 mr-3 text-gray-400'
+                    className='w-4 h-4 sm:w-5 sm:h-5 mr-2 sm:mr-3 text-gray-400'
                     fill='none'
                     stroke='currentColor'
                     viewBox='0 0 24 24'
@@ -420,18 +422,19 @@ const CourseDetail = () => {
 
               {/* CTA */}
               {!isAuthenticated && !isDemo ? (
-                <Link to='/login' className='btn-primary w-full mt-6'>
+                <Link
+                  to='/login'
+                  className='btn-primary w-full mt-4 sm:mt-6 text-sm sm:text-base'
+                >
                   Login untuk Mulai
                 </Link>
               ) : course.modules?.length > 0 &&
                 course.modules[0].lessons?.length > 0 ? (
                 <Link
                   to={`/lesson/${course.modules[0].lessons[0].id}`}
-                  className='btn-primary w-full mt-6'
+                  className='btn-primary w-full mt-4 sm:mt-6 text-sm sm:text-base'
                 >
-                  {getCompletedLessons() > 0
-                    ? 'Lanjutkan Belajar'
-                    : 'Mulai Belajar'}
+                  {getCompletedLessons() > 0 ? 'Lanjutkan' : 'Mulai Belajar'}
                 </Link>
               ) : null}
             </div>
