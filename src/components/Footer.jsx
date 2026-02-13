@@ -27,7 +27,8 @@ const Footer = () => {
             </Link>
             <p className='text-gray-400 text-sm max-w-md'>
               Platform persiapan Tes Kemampuan Akademik (TKA) untuk membantu
-              Anda lolos seleksi PTN impian. Belajar kapan saja, di mana saja.
+              Anda lolos seleksi SMA/SMK impian. Belajar kapan saja, di mana
+              saja.
             </p>
             {/* Social Icons */}
             <div className='flex space-x-4 mt-4'>

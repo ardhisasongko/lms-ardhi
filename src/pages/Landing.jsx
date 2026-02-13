@@ -39,7 +39,7 @@ const Landing = () => {
               <p className='text-lg text-gray-600 mb-8 max-w-xl mx-auto lg:mx-0'>
                 Platform persiapan Tes Kemampuan Akademik (TKA) dengan video
                 pembelajaran, latihan soal interaktif, dan tracking progress
-                untuk membantu Anda lolos seleksi PTN impian.
+                untuk membantu Anda lolos seleksi SMA/SMK impian.
               </p>
               <div className='flex flex-col sm:flex-row gap-4 justify-center lg:justify-start'>
                 {isAuthenticated ? (
