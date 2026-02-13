@@ -95,16 +95,14 @@ const Landing = () => {
                 <div className='bg-gradient-to-br from-primary-500 via-secondary-500 to-accent-500 rounded-xl p-1'>
                   <div className='bg-white rounded-lg p-6'>
                     <div className='video-container rounded-lg overflow-hidden bg-gradient-to-br from-gray-100 to-gray-50'>
-                      <div className='relative flex items-center justify-center min-h-[220px]'>
+                      <div className='relative w-full pt-[56.25%] rounded-lg overflow-hidden'>
                         <iframe
-                          width='360'
-                          height='215'
-                          src='https://www.youtube.com/embed/W6NZfCO5SIk'
-                          title='Video Literasi Bahasa Indonesia'
+                          src='https://www.youtube.com/embed/KwJ_HMedAFQ?start=21'
+                          title='BEDAH KISI-KISI TKA Bahasa Indonesia SMP/MTs Bagian 1'
                           frameBorder='0'
                           allow='accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture'
                           allowFullScreen
-                          className='rounded-lg shadow-lg mx-auto'
+                          className='absolute top-0 left-0 w-full h-full rounded-lg shadow-lg'
                         ></iframe>
                       </div>
                     </div>
