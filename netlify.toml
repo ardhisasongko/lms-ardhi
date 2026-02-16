@@ -2,6 +2,11 @@
   publish = "dist"
   command = "npm run build"
 
+# Environment variables required for production:
+# VITE_API_URL = https://tka-ardhi-production.up.railway.app/api
+# 
+# Set these in: Netlify Dashboard → Site settings → Environment variables
+
 [[redirects]]
   from = "/*"
   to = "/index.html"

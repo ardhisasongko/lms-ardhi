@@ -19,23 +19,36 @@ app.locals.supabase = supabase;
 const PORT = process.env.PORT || 5000;
 
 // Middleware
-console.log('CORS allowed origins:', process.env.FRONTEND_URL);
-
 // Middleware to allow Private Network Access (for accessing localhost from public URL)
 app.use((req, res, next) => {
   res.setHeader('Access-Control-Allow-Private-Network', 'true');
   next();
 });
+
 app.use(
   cors({
     origin: [
       process.env.FRONTEND_URL,
       'http://localhost:5173',
       'https://tka-ardhi.netlify.app',
-    ],
+    ].filter(Boolean), // Remove undefined values
     credentials: true,
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization', 'Access-Control-Allow-Private-Network'],
+    preflightContinue: false,
+    optionsSuccessStatus: 204
   }),
 );
+
+// Explicitly handle OPTIONS requests for Private Network Access
+app.options('*', (req, res) => { // checks for any OPTIONS request
+  res.setHeader('Access-Control-Allow-Private-Network', 'true');
+  res.setHeader('Access-Control-Allow-Origin', req.headers.origin || '*');
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization, Access-Control-Allow-Private-Network');
+  res.setHeader('Access-Control-Allow-Credentials', 'true');
+  res.sendStatus(204);
+});
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
