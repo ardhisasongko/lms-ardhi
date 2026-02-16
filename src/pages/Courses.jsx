@@ -15,46 +15,42 @@ const Courses = () => {
   const [isDemo, setIsDemo] = useState(false);
 
   useEffect(() => {
-    const fetchCategories = async () => {
-      try {
-        const response = await api.getCategories();
-        setCategories(response.data.categories || []);
-      } catch (err) {
-        console.error('Error fetching categories:', err);
-        // Use demo categories if API fails
-        setCategories(DEMO_CATEGORIES);
-      }
-    };
-    fetchCategories();
-  }, []);
-
-  useEffect(() => {
     const fetchCourses = async () => {
       try {
         setLoading(true);
-        setError('');
-        const response = await api.getCourses(page, 9, selectedCategory);
-        setCourses(response.data.courses || []);
-        setPagination(response.data.pagination);
-        setIsDemo(false);
-      } catch (err) {
-        console.error('Error fetching courses:', err);
-        // Use demo courses if API fails
-        let filteredCourses = DEMO_COURSES;
-        if (selectedCategory) {
-          filteredCourses = DEMO_COURSES.filter(
-            (c) => c.category === selectedCategory,
+
+        // Try to fetch from backend API first
+        try {
+          const response = await api.getCourses(page, 100, selectedCategory);
+          setCourses(response.data.courses || []);
+          setPagination(response.data.pagination);
+          setCategories(response.data.categories || ['Literasi', 'Kuantitatif']);
+          setIsDemo(false);
+        } catch (apiError) {
+          console.error('API fetch failed, using demo data:', apiError);
+
+          // Fallback to demo data
+          let filteredCourses = DEMO_COURSES.filter(
+            (c) => c.category === 'Literasi' || c.category === 'Kuantitatif',
           );
+          if (selectedCategory) {
+            filteredCourses = filteredCourses.filter(
+              (c) => c.category === selectedCategory,
+            );
+          }
+          setCourses(filteredCourses);
+          setCategories(DEMO_CATEGORIES.filter(c => c === 'Literasi' || c === 'Kuantitatif'));
+          setIsDemo(true);
         }
-        setCourses(filteredCourses);
-        setPagination(null);
-        setIsDemo(true);
+      } catch (err) {
+        console.error('Error in fetchCourses:', err);
+        setError('Gagal memuat materi.');
       } finally {
         setLoading(false);
       }
     };
     fetchCourses();
-  }, [page, selectedCategory]);
+  }, [selectedCategory, page]);
 
   const handleCategoryChange = (category) => {
     setSelectedCategory(category);
@@ -140,11 +136,10 @@ const Courses = () => {
         <div className='mb-4 sm:mb-8 flex flex-wrap gap-1.5 sm:gap-2'>
           <button
             onClick={() => handleCategoryChange('')}
-            className={`px-3 sm:px-4 py-1.5 sm:py-2 rounded-full text-xs sm:text-sm font-medium transition-all ${
-              selectedCategory === ''
+            className={`px-3 sm:px-4 py-1.5 sm:py-2 rounded-full text-xs sm:text-sm font-medium transition-all ${selectedCategory === ''
                 ? 'bg-gradient-to-r from-primary-600 to-secondary-600 text-white shadow-md'
                 : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
-            }`}
+              }`}
           >
             ✨ Semua
           </button>
@@ -154,11 +149,10 @@ const Courses = () => {
               <button
                 key={category}
                 onClick={() => handleCategoryChange(category)}
-                className={`px-3 sm:px-4 py-1.5 sm:py-2 rounded-full text-xs sm:text-sm font-medium transition-all ${
-                  selectedCategory === category
+                className={`px-3 sm:px-4 py-1.5 sm:py-2 rounded-full text-xs sm:text-sm font-medium transition-all ${selectedCategory === category
                     ? `bg-gradient-to-r ${catColors.bg} text-white shadow-md`
                     : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
-                }`}
+                  }`}
               >
                 {category}
               </button>
@@ -195,111 +189,58 @@ const Courses = () => {
             <p className='text-gray-500 text-sm'>Course akan segera tersedia</p>
           </div>
         ) : (
-          <>
-            {/* Course Grid */}
-            <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 mb-6 sm:mb-8'>
-              {courses.map((course) => {
-                const colors = getCategoryColors(course.category);
-                return (
-                  <Link
-                    key={course.id}
-                    to={`/course/${course.id}`}
-                    className='card-hover group'
+          <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-6'>
+            {courses.map((course) => (
+              <Link
+                key={course.id}
+                to={`/course/${course.id}`}
+                className='card-hover'
+              >
+                <div className='h-24 sm:h-40 bg-gradient-to-br from-primary-500 to-primary-600 flex items-center justify-center rounded-t-xl'>
+                  <svg
+                    className='w-10 h-10 sm:w-16 sm:h-16 text-white/30'
+                    fill='none'
+                    stroke='currentColor'
+                    viewBox='0 0 24 24'
                   >
-                    <div
-                      className={`h-32 sm:h-44 bg-gradient-to-br ${colors.bg} flex items-center justify-center relative overflow-hidden`}
+                    <path
+                      strokeLinecap='round'
+                      strokeLinejoin='round'
+                      strokeWidth={2}
+                      d='M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253'
+                    />
+                  </svg>
+                </div>
+                <div className='p-3 sm:p-5'>
+                  <span className='inline-block px-2 py-0.5 sm:py-1 bg-primary-100 text-primary-700 text-[10px] sm:text-xs font-medium rounded mb-1 sm:mb-2'>
+                    {course.category}
+                  </span>
+                  <h3 className='text-sm sm:text-base font-semibold text-gray-900 mb-1 sm:mb-2 line-clamp-2'>
+                    {course.title}
+                  </h3>
+                  <p className='text-gray-500 text-xs sm:text-sm line-clamp-2 hidden sm:block'>
+                    {course.description}
+                  </p>
+                  <div className='mt-2 sm:mt-4 flex items-center text-xs sm:text-sm text-gray-400'>
+                    <svg
+                      className='w-3 h-3 sm:w-4 sm:h-4 mr-1'
+                      fill='none'
+                      stroke='currentColor'
+                      viewBox='0 0 24 24'
                     >
-                      <svg
-                        className='w-14 h-14 sm:w-20 sm:h-20 text-white/20 group-hover:scale-110 transition-transform'
-                        fill='none'
-                        stroke='currentColor'
-                        viewBox='0 0 24 24'
-                      >
-                        <path
-                          strokeLinecap='round'
-                          strokeLinejoin='round'
-                          strokeWidth={2}
-                          d='M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253'
-                        />
-                      </svg>
-                      <div className='absolute inset-0 bg-gradient-to-t from-black/30 to-transparent' />
-                    </div>
-                    <div className='p-3 sm:p-5'>
-                      <span
-                        className={`inline-block px-2 sm:px-2.5 py-0.5 sm:py-1 ${colors.badge} text-xs font-medium rounded-full mb-2 sm:mb-3`}
-                      >
-                        {course.category}
-                      </span>
-                      <h3 className='font-semibold text-gray-900 mb-1 sm:mb-2 line-clamp-2 group-hover:text-primary-600 transition-colors text-sm sm:text-base'>
-                        {course.title}
-                      </h3>
-                      <p className='text-gray-500 text-xs sm:text-sm line-clamp-2 mb-3 sm:mb-4'>
-                        {course.description}
-                      </p>
-                      <div className='flex items-center justify-between text-xs sm:text-sm'>
-                        <div className='flex items-center text-gray-400'>
-                          <svg
-                            className='w-3 h-3 sm:w-4 sm:h-4 mr-1'
-                            fill='none'
-                            stroke='currentColor'
-                            viewBox='0 0 24 24'
-                          >
-                            <path
-                              strokeLinecap='round'
-                              strokeLinejoin='round'
-                              strokeWidth={2}
-                              d='M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10'
-                            />
-                          </svg>
-                          {course.moduleCount || 0} Modules
-                        </div>
-                        <span className='text-primary-600 font-medium group-hover:translate-x-1 transition-transform inline-block'>
-                          Mulai →
-                        </span>
-                      </div>
-                    </div>
-                  </Link>
-                );
-              })}
-            </div>
-
-            {/* Pagination */}
-            {pagination && pagination.totalPages > 1 && (
-              <div className='flex justify-center gap-1.5 sm:gap-2'>
-                <button
-                  onClick={() => setPage(page - 1)}
-                  disabled={page === 1}
-                  className='px-2 sm:px-4 py-1.5 sm:py-2 rounded-lg border border-gray-200 text-gray-600 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed text-xs sm:text-sm'
-                >
-                  <span className='hidden sm:inline'>Previous</span>
-                  <span className='sm:hidden'>←</span>
-                </button>
-
-                {[...Array(pagination.totalPages)].map((_, i) => (
-                  <button
-                    key={i + 1}
-                    onClick={() => setPage(i + 1)}
-                    className={`w-8 h-8 sm:w-10 sm:h-10 rounded-lg font-medium transition-colors text-xs sm:text-sm ${
-                      page === i + 1
-                        ? 'bg-primary-600 text-white'
-                        : 'border border-gray-200 text-gray-600 hover:bg-gray-50'
-                    }`}
-                  >
-                    {i + 1}
-                  </button>
-                ))}
-
-                <button
-                  onClick={() => setPage(page + 1)}
-                  disabled={page === pagination.totalPages}
-                  className='px-2 sm:px-4 py-1.5 sm:py-2 rounded-lg border border-gray-200 text-gray-600 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed text-xs sm:text-sm'
-                >
-                  <span className='hidden sm:inline'>Next</span>
-                  <span className='sm:hidden'>→</span>
-                </button>
-              </div>
-            )}
-          </>
+                      <path
+                        strokeLinecap='round'
+                        strokeLinejoin='round'
+                        strokeWidth={2}
+                        d='M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10'
+                      />
+                    </svg>
+                    {course.moduleCount || 0} Modules
+                  </div>
+                </div>
+              </Link>
+            ))}
+          </div>
         )}
       </div>
     </div>

@@ -1,7 +1,14 @@
 import { createClient } from '@supabase/supabase-js';
 import dotenv from 'dotenv';
 
-dotenv.config();
+import path from 'path';
+import { fileURLToPath } from 'url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+// Load .env from backend root (one level up from services)
+dotenv.config({ path: path.resolve(__dirname, '../.env') });
 
 // Initialize Supabase client
 const supabaseUrl = process.env.SUPABASE_URL;
@@ -230,9 +237,106 @@ export const upsertRow = async (tableName, values, conflictColumn = 'id') => {
   }
 };
 
+/**
+ * Get data with specific fields only (selective fetching)
+ * @param {string} tableName - Name of the table
+ * @param {string} fields - Fields to select (default '*')
+ * @returns {Promise<Array>} - Array of objects with selected fields
+ */
+export const getSheetDataSelective = async (tableName, fields = '*') => {
+  try {
+    const { data, error } = await supabase.from(tableName).select(fields);
+
+    if (error) throw error;
+    return data || [];
+  } catch (error) {
+    console.error(`Error fetching ${fields} from ${tableName}:`, error);
+    throw error;
+  }
+};
+
+/**
+ * Get filtered data with specific fields
+ * @param {string} tableName - Name of the table
+ * @param {string} columnName - Name of the column to filter
+ * @param {string} value - Value to filter by
+ * @param {string} fields - Fields to select (default '*')
+ * @returns {Promise<Array>} - Array of matching rows
+ */
+export const filterByColumnWithFields = async (
+  tableName,
+  columnName,
+  value,
+  fields = '*',
+) => {
+  try {
+    const { data, error } = await supabase
+      .from(tableName)
+      .select(fields)
+      .eq(columnName, value);
+
+    if (error) throw error;
+    return data || [];
+  } catch (error) {
+    console.error(`Error filtering data in ${tableName}:`, error);
+    throw error;
+  }
+};
+
+/**
+ * Get data with relations (joins)
+ * @param {string} tableName - Name of the table
+ * @param {Object} filters - Object with column:value pairs to filter
+ * @param {string} relations - Supabase relation string (e.g., '*, modules(*)')
+ * @returns {Promise<Array>} - Array of objects with relations
+ */
+export const getWithRelations = async (tableName, filters = {}, relations = '*') => {
+  try {
+    let query = supabase.from(tableName).select(relations);
+
+    // Apply filters
+    Object.entries(filters).forEach(([key, value]) => {
+      query = query.eq(key, value);
+    });
+
+    const { data, error } = await query;
+    if (error) throw error;
+    return data || [];
+  } catch (error) {
+    console.error(`Error fetching with relations from ${tableName}:`, error);
+    throw error;
+  }
+};
+
+/**
+ * Get single record with relations
+ * @param {string} tableName - Name of the table
+ * @param {Object} filters - Object with column:value pairs to filter
+ * @param {string} relations - Supabase relation string
+ * @returns {Promise<Object|null>} - Single object with relations or null
+ */
+export const getSingleWithRelations = async (tableName, filters = {}, relations = '*') => {
+  try {
+    let query = supabase.from(tableName).select(relations);
+
+    // Apply filters
+    Object.entries(filters).forEach(([key, value]) => {
+      query = query.eq(key, value);
+    });
+
+    const { data, error } = await query.single();
+    if (error) throw error;
+    return data;
+  } catch (error) {
+    console.error(`Error fetching single with relations from ${tableName}:`, error);
+    throw error;
+  }
+};
+
 export default {
   supabase,
   getSheetData,
+  getSheetDataSelective,
   insertRow,
   appendRow,
   updateRow,
@@ -241,6 +345,9 @@ export default {
   findById,
   filterByColumn,
   filterByColumnOrdered,
+  filterByColumnWithFields,
+  getWithRelations,
+  getSingleWithRelations,
   upsertRow,
   TABLES,
   SHEETS,

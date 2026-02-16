@@ -9,7 +9,7 @@ const Landing = () => {
       {/* Hero Section */}
       <section className='relative overflow-hidden py-20 lg:py-32'>
         {/* Gradient Background */}
-        <div className='absolute inset-0 bg-gradient-to-br from-primary-50 via-secondary-50 to-accent-50' />
+        <div className='absolute inset-0 bg-gradient-to-br from-primary-50 via-secondary-50 to-accent-50 dark:from-gray-800 dark:via-gray-900 dark:to-gray-800' />
 
         {/* Decorative Blobs */}
         <div className='absolute top-0 left-0 w-72 h-72 bg-primary-300 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-pulse' />
@@ -25,18 +25,18 @@ const Landing = () => {
         <div className='container-main relative'>
           <div className='grid lg:grid-cols-2 gap-12 items-center'>
             <div className='text-center lg:text-left'>
-              <div className='inline-block px-4 py-2 bg-white/80 backdrop-blur rounded-full shadow-sm mb-6'>
+              <div className='inline-block px-4 py-2 bg-white/80 dark:bg-gray-800/80 backdrop-blur rounded-full shadow-sm mb-6'>
                 <span className='text-sm font-medium'>
-                  <span className='text-secondary-600'>✨ Platform</span>
-                  <span className='text-gray-600'> Persiapan TKA Terbaik</span>
+                  <span className='text-secondary-600 dark:text-secondary-400'>✨ Platform</span>
+                  <span className='text-gray-600 dark:text-gray-300'> Persiapan TKA Terbaik</span>
                 </span>
               </div>
 
-              <h1 className='text-4xl lg:text-6xl font-bold text-gray-900 leading-tight mb-6'>
+              <h1 className='text-4xl lg:text-6xl font-bold text-gray-900 dark:text-white leading-tight mb-6'>
                 Raih Skor Tinggi TKA dengan{' '}
                 <span className='text-gradient'>TKA Master</span>
               </h1>
-              <p className='text-lg text-gray-600 mb-8 max-w-xl mx-auto lg:mx-0'>
+              <p className='text-lg text-gray-600 dark:text-gray-300 mb-8 max-w-xl mx-auto lg:mx-0'>
                 Platform persiapan Tes Kemampuan Akademik (TKA) dengan video
                 pembelajaran, latihan soal interaktif, dan tracking progress
                 untuk membantu Anda lolos seleksi SMA/SMK impian.
@@ -69,31 +69,37 @@ const Landing = () => {
             </div>
 
             <div className='relative'>
-              {/* Floating Cards */}
+              {/* Floating Cards - Responsive & Mobile Friendly */}
               <div
-                className='absolute -top-4 -left-4 bg-gradient-to-br from-secondary-500 to-secondary-600 text-white p-4 rounded-xl shadow-xl z-10 animate-bounce'
-                style={{ animationDuration: '3s' }}
+                className='absolute -top-2 -left-2 bg-gradient-to-br from-secondary-500 to-secondary-600 text-white px-3 py-2 rounded-lg shadow-xl z-10 animate-bounce flex items-center gap-1 sm:px-4 sm:py-3 sm:rounded-xl sm:gap-2'
+                style={{
+                  animationDuration: '3s',
+                  fontSize: 'clamp(0.85rem, 2vw, 1.1rem)',
+                }}
               >
-                <div className='flex items-center gap-2'>
-                  <span className='text-2xl'>📚</span>
-                  <span className='font-semibold'>5 Subtes TKA</span>
-                </div>
+                <span className='text-lg sm:text-2xl'>📚</span>
+                <span className='font-semibold text-xs sm:text-base'>
+                  5 Subtes TKA
+                </span>
               </div>
 
               <div
-                className='absolute -bottom-4 -right-4 bg-gradient-to-br from-accent-500 to-accent-600 text-white p-4 rounded-xl shadow-xl z-10 animate-bounce'
-                style={{ animationDuration: '3.5s' }}
+                className='absolute -bottom-2 -right-2 bg-gradient-to-br from-accent-500 to-accent-600 text-white px-3 py-2 rounded-lg shadow-xl z-10 animate-bounce flex items-center gap-1 sm:px-4 sm:py-3 sm:rounded-xl sm:gap-2'
+                style={{
+                  animationDuration: '3.5s',
+                  fontSize: 'clamp(0.85rem, 2vw, 1.1rem)',
+                }}
               >
-                <div className='flex items-center gap-2'>
-                  <span className='text-2xl'>🎯</span>
-                  <span className='font-semibold'>Latihan Soal</span>
-                </div>
+                <span className='text-lg sm:text-2xl'>🎯</span>
+                <span className='font-semibold text-xs sm:text-base'>
+                  Latihan Soal
+                </span>
               </div>
 
               {/* Main Card */}
-              <div className='bg-white rounded-2xl shadow-2xl p-2 transform hover:scale-105 transition-transform duration-300'>
+              <div className='bg-white dark:bg-gray-800 rounded-2xl shadow-2xl p-2 transform hover:scale-105 transition-transform duration-300'>
                 <div className='bg-gradient-to-br from-primary-500 via-secondary-500 to-accent-500 rounded-xl p-1'>
-                  <div className='bg-white rounded-lg p-6'>
+                  <div className='bg-white dark:bg-gray-900 rounded-lg p-6'>
                     <div className='video-container rounded-lg overflow-hidden bg-gradient-to-br from-gray-100 to-gray-50'>
                       <div className='relative w-full pt-[56.25%] rounded-lg overflow-hidden'>
                         <iframe
@@ -115,7 +121,7 @@ const Landing = () => {
       </section>
 
       {/* Features Section */}
-      <section className='py-20 bg-white relative overflow-hidden'>
+      <section className='py-20 bg-white dark:bg-gray-900 relative overflow-hidden transition-colors'>
         {/* Background Pattern */}
         <div className='absolute inset-0 opacity-5'>
           <div
@@ -130,14 +136,14 @@ const Landing = () => {
 
         <div className='container-main relative'>
           <div className='text-center mb-16'>
-            <span className='inline-block px-4 py-1 bg-secondary-100 text-secondary-700 rounded-full text-sm font-medium mb-4'>
+            <span className='inline-block px-4 py-1 bg-secondary-100 dark:bg-secondary-900 text-secondary-700 dark:text-secondary-300 rounded-full text-sm font-medium mb-4'>
               Fitur Unggulan
             </span>
-            <h2 className='text-3xl lg:text-4xl font-bold text-gray-900 mb-4'>
+            <h2 className='text-3xl lg:text-4xl font-bold text-gray-900 dark:text-white mb-4'>
               Semua yang Anda Butuhkan untuk{' '}
               <span className='text-gradient-primary'>Lolos TKA</span>
             </h2>
-            <p className='text-gray-600 max-w-2xl mx-auto'>
+            <p className='text-gray-600 dark:text-gray-300 max-w-2xl mx-auto'>
               Platform kami dirancang untuk mempersiapkan Anda menghadapi Tes
               Kemampuan Akademik dengan materi lengkap dan terstruktur
             </p>
@@ -161,10 +167,10 @@ const Landing = () => {
                   />
                 </svg>
               </div>
-              <h3 className='text-xl font-semibold text-gray-900 mb-3'>
+              <h3 className='text-xl font-semibold text-gray-900 dark:text-white mb-3'>
                 Video Pembahasan
               </h3>
-              <p className='text-gray-600'>
+              <p className='text-gray-600 dark:text-gray-300'>
                 Tonton video pembahasan soal TKA dari tutor berpengalaman dengan
                 penjelasan detail
               </p>
@@ -187,10 +193,10 @@ const Landing = () => {
                   />
                 </svg>
               </div>
-              <h3 className='text-xl font-semibold text-gray-900 mb-3'>
+              <h3 className='text-xl font-semibold text-gray-900 dark:text-white mb-3'>
                 Latihan Soal TKA
               </h3>
-              <p className='text-gray-600'>
+              <p className='text-gray-600 dark:text-gray-300'>
                 Uji kemampuan dengan latihan soal TKA dan lihat skor Anda secara
                 real-time
               </p>
@@ -213,10 +219,10 @@ const Landing = () => {
                   />
                 </svg>
               </div>
-              <h3 className='text-xl font-semibold text-gray-900 mb-3'>
+              <h3 className='text-xl font-semibold text-gray-900 dark:text-white mb-3'>
                 Progress Tracking
               </h3>
-              <p className='text-gray-600'>
+              <p className='text-gray-600 dark:text-gray-300'>
                 Pantau kemajuan persiapan TKA Anda dengan dashboard yang
                 informatif dan mudah dipahami
               </p>
@@ -269,13 +275,13 @@ const Landing = () => {
       </section>
 
       {/* How It Works */}
-      <section className='py-20 bg-gray-50'>
+      <section className='py-20 bg-gray-50 dark:bg-gray-800 transition-colors'>
         <div className='container-main'>
           <div className='text-center mb-16'>
-            <span className='inline-block px-4 py-1 bg-accent-100 text-accent-700 rounded-full text-sm font-medium mb-4'>
+            <span className='inline-block px-4 py-1 bg-accent-100 dark:bg-accent-900 text-accent-700 dark:text-accent-300 rounded-full text-sm font-medium mb-4'>
               Cara Kerja
             </span>
-            <h2 className='text-3xl lg:text-4xl font-bold text-gray-900 mb-4'>
+            <h2 className='text-3xl lg:text-4xl font-bold text-gray-900 dark:text-white mb-4'>
               Mulai Belajar dalam{' '}
               <span className='text-gradient-accent'>3 Langkah</span>
             </h2>
@@ -287,10 +293,10 @@ const Landing = () => {
               <div className='w-16 h-16 bg-gradient-to-br from-primary-500 to-primary-600 rounded-full flex items-center justify-center mx-auto mb-6 text-2xl font-bold text-white shadow-lg'>
                 1
               </div>
-              <h3 className='text-xl font-semibold text-gray-900 mb-3'>
+              <h3 className='text-xl font-semibold text-gray-900 dark:text-white mb-3'>
                 Daftar Gratis
               </h3>
-              <p className='text-gray-600'>
+              <p className='text-gray-600 dark:text-gray-300'>
                 Buat akun dalam hitungan detik dan mulai eksplorasi materi TKA
               </p>
               {/* Connector Line */}
@@ -302,10 +308,10 @@ const Landing = () => {
               <div className='w-16 h-16 bg-gradient-to-br from-secondary-500 to-secondary-600 rounded-full flex items-center justify-center mx-auto mb-6 text-2xl font-bold text-white shadow-lg'>
                 2
               </div>
-              <h3 className='text-xl font-semibold text-gray-900 mb-3'>
+              <h3 className='text-xl font-semibold text-gray-900 dark:text-white mb-3'>
                 Pilih Subtes
               </h3>
-              <p className='text-gray-600'>
+              <p className='text-gray-600 dark:text-gray-300'>
                 Temukan subtes TKA yang ingin Anda kuasai lebih dalam
               </p>
               <div className='hidden md:block absolute top-8 left-1/2 w-full h-0.5 bg-gradient-to-r from-secondary-300 to-accent-300' />
@@ -316,10 +322,10 @@ const Landing = () => {
               <div className='w-16 h-16 bg-gradient-to-br from-accent-500 to-accent-600 rounded-full flex items-center justify-center mx-auto mb-6 text-2xl font-bold text-white shadow-lg'>
                 3
               </div>
-              <h3 className='text-xl font-semibold text-gray-900 mb-3'>
+              <h3 className='text-xl font-semibold text-gray-900 dark:text-white mb-3'>
                 Mulai Latihan
               </h3>
-              <p className='text-gray-600'>
+              <p className='text-gray-600 dark:text-gray-300'>
                 Tonton video, selesaikan latihan soal, dan pantau progress Anda
               </p>
             </div>
@@ -328,22 +334,22 @@ const Landing = () => {
       </section>
 
       {/* CTA Section */}
-      <section className='py-20 bg-white relative overflow-hidden'>
-        <div className='absolute inset-0 bg-gradient-to-br from-primary-50 via-white to-secondary-50' />
+      <section className='py-20 bg-white dark:bg-gray-900 relative overflow-hidden transition-colors'>
+        <div className='absolute inset-0 bg-gradient-to-br from-primary-50 via-white to-secondary-50 dark:from-gray-800 dark:via-gray-900 dark:to-gray-800' />
 
         <div className='container-main text-center relative'>
           <div className='inline-block p-1 bg-gradient-to-r from-primary-500 via-secondary-500 to-accent-500 rounded-2xl mb-8'>
-            <div className='bg-white px-6 py-3 rounded-xl'>
+            <div className='bg-white dark:bg-gray-800 px-6 py-3 rounded-xl'>
               <span className='text-transparent bg-clip-text bg-gradient-to-r from-primary-600 via-secondary-500 to-accent-500 font-semibold'>
                 🎉 Raih PTN impianmu hari ini!
               </span>
             </div>
           </div>
 
-          <h2 className='text-3xl lg:text-4xl font-bold text-gray-900 mb-4'>
+          <h2 className='text-3xl lg:text-4xl font-bold text-gray-900 dark:text-white mb-4'>
             Siap Untuk Taklukkan TKA?
           </h2>
-          <p className='text-gray-600 max-w-xl mx-auto mb-8'>
+          <p className='text-gray-600 dark:text-gray-300 max-w-xl mx-auto mb-8'>
             Daftar sekarang dan akses semua materi persiapan TKA secara gratis.
             Bergabung dengan ribuan peserta lainnya!
           </p>

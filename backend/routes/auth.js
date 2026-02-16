@@ -54,8 +54,8 @@ router.post('/register', registerValidation, async (req, res) => {
       });
     }
 
-    // Hash password
-    const saltRounds = 10;
+    // Hash password (8 rounds for better performance, still secure)
+    const saltRounds = 8;
     const passwordHash = await bcrypt.hash(password, saltRounds);
 
     // Only allow student role for self-registration

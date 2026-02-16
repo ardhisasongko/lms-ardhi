@@ -7,7 +7,7 @@ import { getDemoLessonWithDetails } from '../data/demoData';
 
 const Lesson = () => {
   const { id } = useParams();
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, isDemo: isDemoAuth } = useAuth();
   const navigate = useNavigate();
 
   const [lesson, setLesson] = useState(null);
@@ -33,10 +33,18 @@ const Lesson = () => {
           setQuizzes(response.data.quizzes || []);
           setUserProgress(response.data.userProgress);
           setNavigation(response.data.navigation);
-          setIsDemo(false);
+          setIsDemo(isDemoAuth); // gunakan status demo dari context
         } else {
           // Not authenticated - try demo data
-          throw new Error('Not authenticated - use demo');
+          setIsDemo(true);
+          const demoData = getDemoLessonWithDetails(id);
+          if (demoData) {
+            setLesson(demoData.lesson);
+            setQuizzes(demoData.quizzes);
+            setNavigation(demoData.navigation);
+          } else {
+            setError('Lesson tidak ditemukan.');
+          }
         }
       } catch (err) {
         console.error('Error fetching lesson:', err);
@@ -66,6 +74,12 @@ const Lesson = () => {
     return match && match[2].length === 11 ? match[2] : null;
   };
 
+  // PATCH: fallback ke youtube_url jika video_url tidak ada
+  // PATCH: Cek null sebelum akses video_url/youtube_url
+  const youtubeId = lesson
+    ? extractYouTubeId(lesson.video_url || lesson.youtube_url)
+    : null;
+
   if (loading) {
     return (
       <div className='page-container py-12'>
@@ -92,13 +106,11 @@ const Lesson = () => {
     );
   }
 
-  const youtubeId = extractYouTubeId(lesson.video_url);
-
   return (
     <div className='page-container py-4 sm:py-6'>
       <div className='container-main px-3 sm:px-4'>
-        {/* Demo Mode Banner */}
-        {isDemo && (
+        {/* Demo Mode Banner: hanya tampil jika belum login */}
+        {isDemo && !isAuthenticated && false && (
           <div className='mb-4 sm:mb-6 p-3 sm:p-4 bg-blue-50 border border-blue-200 rounded-lg text-blue-700 text-sm'>
             <div className='flex items-center'>
               <svg
@@ -121,6 +133,21 @@ const Lesson = () => {
           </div>
         )}
 
+        {/* Header Course Info (if available) */}
+        {lesson.course && (
+          <div className='card p-4 sm:p-6 mb-4 sm:mb-6'>
+            <span className='inline-block px-2 sm:px-3 py-0.5 sm:py-1 bg-primary-100 text-primary-700 text-xs sm:text-sm font-medium rounded-full mb-2 sm:mb-3'>
+              {lesson.course.category}
+            </span>
+            <h1 className='text-xl sm:text-2xl font-bold text-gray-900 mb-1 sm:mb-2'>
+              {lesson.course.title}
+            </h1>
+            <p className='text-gray-600 text-xs sm:text-base mb-2 sm:mb-4'>
+              {lesson.course.description}
+            </p>
+          </div>
+        )}
+
         {/* Breadcrumb */}
         <nav className='flex items-center space-x-1 sm:space-x-2 text-xs sm:text-sm text-gray-500 mb-4 sm:mb-6 flex-wrap'>
           <Link to='/courses' className='hover:text-primary-600'>
@@ -139,68 +166,52 @@ const Lesson = () => {
               d='M9 5l7 7-7 7'
             />
           </svg>
-          {lesson.course && (
-            <>
-              <Link
-                to={`/course/${lesson.course.id}`}
-                className='hover:text-primary-600 truncate max-w-[100px] sm:max-w-none'
-              >
-                {lesson.course.title}
-              </Link>
-              <svg
-                className='w-3 h-3 sm:w-4 sm:h-4 flex-shrink-0'
-                fill='none'
-                stroke='currentColor'
-                viewBox='0 0 24 24'
-              >
-                <path
-                  strokeLinecap='round'
-                  strokeLinejoin='round'
-                  strokeWidth={2}
-                  d='M9 5l7 7-7 7'
-                />
-              </svg>
-            </>
-          )}
-          <span className='text-gray-900 truncate'>{lesson.title}</span>
+          <Link
+            to={`/lesson/${lesson.id}`}
+            className='hover:text-primary-600 truncate max-w-[100px] sm:max-w-none'
+          >
+            {lesson.title}
+          </Link>
         </nav>
 
         <div className='grid lg:grid-cols-3 gap-4 sm:gap-8'>
           {/* Main Content */}
           <div className='lg:col-span-2'>
-            {/* Video Player */}
-            <div className='card overflow-hidden mb-4 sm:mb-6'>
-              {youtubeId ? (
-                <div className='video-container'>
-                  <iframe
-                    src={`https://www.youtube.com/embed/${youtubeId}?rel=0&modestbranding=1`}
-                    title={lesson.title}
-                    allow='accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture'
-                    allowFullScreen
-                    loading='lazy'
-                  />
-                </div>
-              ) : (
-                <div className='aspect-video bg-gray-100 flex items-center justify-center'>
-                  <div className='text-center text-gray-500'>
-                    <svg
-                      className='w-12 h-12 sm:w-16 sm:h-16 mx-auto mb-2 opacity-50'
-                      fill='none'
-                      stroke='currentColor'
-                      viewBox='0 0 24 24'
-                    >
-                      <path
-                        strokeLinecap='round'
-                        strokeLinejoin='round'
-                        strokeWidth={2}
-                        d='M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z'
-                      />
-                    </svg>
-                    <p className='text-sm'>Video tidak tersedia</p>
+            {/* Video Player - Only show if video exists */}
+            {(lesson.video_url || lesson.youtube_url) && (
+              <div className='card overflow-hidden mb-4 sm:mb-6'>
+                {youtubeId ? (
+                  <div className='video-container'>
+                    <iframe
+                      src={`https://www.youtube.com/embed/${youtubeId}?rel=0&modestbranding=1`}
+                      title={lesson.title}
+                      allow='accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture'
+                      allowFullScreen
+                      loading='lazy'
+                    />
                   </div>
-                </div>
-              )}
-            </div>
+                ) : (
+                  <div className='aspect-video bg-gray-100 flex items-center justify-center'>
+                    <div className='text-center text-gray-500'>
+                      <svg
+                        className='w-12 h-12 sm:w-16 sm:h-16 mx-auto mb-2 opacity-50'
+                        fill='none'
+                        stroke='currentColor'
+                        viewBox='0 0 24 24'
+                      >
+                        <path
+                          strokeLinecap='round'
+                          strokeLinejoin='round'
+                          strokeWidth={2}
+                          d='M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z'
+                        />
+                      </svg>
+                      <p className='text-sm'>Video tidak tersedia</p>
+                    </div>
+                  </div>
+                )}
+              </div>
+            )}
 
             {/* Lesson Info */}
             <div className='card p-3 sm:p-6 mb-4 sm:mb-6'>
@@ -238,11 +249,10 @@ const Lesson = () => {
                     </p>
                     {userProgress && (
                       <p
-                        className={`text-xs sm:text-sm mt-1 sm:mt-2 font-medium ${
-                          userProgress.completed
+                        className={`text-xs sm:text-sm mt-1 sm:mt-2 font-medium ${userProgress.completed
                             ? 'text-green-600'
                             : 'text-orange-600'
-                        }`}
+                          }`}
                       >
                         {userProgress.completed
                           ? `Skor: ${userProgress.score}%`
@@ -336,11 +346,10 @@ const Lesson = () => {
               <div className='space-y-3 sm:space-y-4'>
                 {/* Completion Status */}
                 <div
-                  className={`p-3 sm:p-4 rounded-lg ${
-                    userProgress?.completed
+                  className={`p-3 sm:p-4 rounded-lg ${userProgress?.completed
                       ? 'bg-green-50 border border-green-200'
                       : 'bg-gray-50 border border-gray-200'
-                  }`}
+                    }`}
                 >
                   <div className='flex items-center'>
                     {userProgress?.completed ? (

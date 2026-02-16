@@ -1,0 +1,302 @@
+[
+  {
+    "number": 1,
+    "answer_key": "a",
+    "element": "",
+    "sub_element": "",
+    "cognitive_level": "",
+    "context": "",
+    "competency": "",
+    "indicator": ""
+  },
+  {
+    "number": 2,
+    "answer_key": "c",
+    "element": "",
+    "sub_element": "",
+    "cognitive_level": "",
+    "context": "",
+    "competency": "",
+    "indicator": ""
+  },
+  {
+    "number": 3,
+    "answer_key": "a dan c",
+    "element": "",
+    "sub_element": "",
+    "cognitive_level": "",
+    "context": "",
+    "competency": "",
+    "indicator": ""
+  },
+  {
+    "number": 4,
+    "answer_key": "b",
+    "element": "",
+    "sub_element": "",
+    "cognitive_level": "",
+    "context": "",
+    "competency": "",
+    "indicator": ""
+  },
+  {
+    "number": 5,
+    "answer_key": "b dan d",
+    "element": "",
+    "sub_element": "",
+    "cognitive_level": "",
+    "context": "",
+    "competency": "",
+    "indicator": ""
+  },
+  {
+    "number": 6,
+    "answer_key": "b",
+    "element": "",
+    "sub_element": "",
+    "cognitive_level": "",
+    "context": "",
+    "competency": "",
+    "indicator": ""
+  },
+  {
+    "number": 7,
+    "answer_key": "a",
+    "element": "",
+    "sub_element": "",
+    "cognitive_level": "",
+    "context": "",
+    "competency": "",
+    "indicator": ""
+  },
+  {
+    "number": 8,
+    "answer_key": "b",
+    "element": "Aljabar",
+    "sub_element": "Persamaan dan Pertidaksamaan Linier",
+    "cognitive_level": "Pengetahuan dan Pemahaman",
+    "context": "Masalah Matematika",
+    "competency": "Memahami, mengaplikasikan, dan bernalar yang lebih tinggi untuk menyelesaikan permasalahan terkait cakupan sub-elemen persamaan linear satu variabel",
+    "indicator": "Disajikan sebuah gambar segitiga dengan semua sudutnya dinyatakan dalam bentuk linear satu variabel, murid dapat menentukan besar salah satu sudutnya"
+  },
+  {
+    "number": 9,
+    "answer_key": "c",
+    "element": "",
+    "sub_element": "",
+    "cognitive_level": "",
+    "context": "",
+    "competency": "",
+    "indicator": ""
+  },
+  {
+    "number": 10,
+    "answer_key": "b",
+    "element": "",
+    "sub_element": "",
+    "cognitive_level": "",
+    "context": "",
+    "competency": "",
+    "indicator": ""
+  },
+  {
+    "number": 11,
+    "answer_key": "a",
+    "element": "",
+    "sub_element": "",
+    "cognitive_level": "",
+    "context": "",
+    "competency": "",
+    "indicator": ""
+  },
+  {
+    "number": 12,
+    "answer_key": "b, c",
+    "element": "",
+    "sub_element": "",
+    "cognitive_level": "",
+    "context": "",
+    "competency": "",
+    "indicator": ""
+  },
+  {
+    "number": 13,
+    "answer_key": "a, c, d",
+    "element": "",
+    "sub_element": "",
+    "cognitive_level": "",
+    "context": "",
+    "competency": "",
+    "indicator": ""
+  },
+  {
+    "number": 14,
+    "answer_key": "a dan b",
+    "element": "",
+    "sub_element": "",
+    "cognitive_level": "",
+    "context": "",
+    "competency": "",
+    "indicator": ""
+  },
+  {
+    "number": 15,
+    "answer_key": "c",
+    "element": "Geometri dan Pengukuran",
+    "sub_element": "Objek geometri",
+    "cognitive_level": "Pengetahuan dan pemahaman",
+    "context": "Masalah sehari-hari",
+    "competency": "Memahami, mengaplikasikan, dan bernalar yang lebih tinggi untuk menyelesaikan permasalahan terkait cakupan sub-elemen hubungan antar- sudut yang terbentuk oleh dua garis  yang berpotongan, dan oleh dua garis sejajar yang dipotong suatu garis transversal (termasuk penentuan besar sudut dalam segitiga)",
+    "indicator": "Disajikan permasalahan berkaitan dengan sebuah pizza yang dipotong menjadi beberapa bagian, murid dapat menentukan besar sudut pizza yang belum dimakan"
+  },
+  {
+    "number": 16,
+    "answer_key": "b",
+    "element": "",
+    "sub_element": "",
+    "cognitive_level": "",
+    "context": "",
+    "competency": "",
+    "indicator": ""
+  },
+  {
+    "number": 17,
+    "answer_key": "a",
+    "element": "",
+    "sub_element": "",
+    "cognitive_level": "",
+    "context": "",
+    "competency": "",
+    "indicator": ""
+  },
+  {
+    "number": 18,
+    "answer_key": "c",
+    "element": "",
+    "sub_element": "",
+    "cognitive_level": "",
+    "context": "",
+    "competency": "",
+    "indicator": ""
+  },
+  {
+    "number": 19,
+    "answer_key": "c dan d",
+    "element": "",
+    "sub_element": "",
+    "cognitive_level": "",
+    "context": "",
+    "competency": "",
+    "indicator": ""
+  },
+  {
+    "number": 20,
+    "answer_key": "b",
+    "element": "",
+    "sub_element": "",
+    "cognitive_level": "",
+    "context": "",
+    "competency": "",
+    "indicator": ""
+  },
+  {
+    "number": 21,
+    "answer_key": "d",
+    "element": "",
+    "sub_element": "",
+    "cognitive_level": "",
+    "context": "",
+    "competency": "",
+    "indicator": ""
+  },
+  {
+    "number": 22,
+    "answer_key": "a dan b",
+    "element": "",
+    "sub_element": "",
+    "cognitive_level": "",
+    "context": "",
+    "competency": "",
+    "indicator": ""
+  },
+  {
+    "number": 23,
+    "answer_key": "b",
+    "element": "",
+    "sub_element": "",
+    "cognitive_level": "",
+    "context": "",
+    "competency": "",
+    "indicator": ""
+  },
+  {
+    "number": 24,
+    "answer_key": "b dan c",
+    "element": "Data dan Peluang",
+    "sub_element": "Data",
+    "cognitive_level": "Pengetahuan dan pemahaman",
+    "context": "Masalah sehari-hari",
+    "competency": "Memahami, mengaplikasikan, dan bernalar yang lebih tinggi untuk menyelesaikan permasalahan terkait cakupan sub-elemen Perumusan pertanyaan untuk mendapatkan data, serta penyajian, dan peginterpretasian data",
+    "indicator": "Disajikan tabel distribusi frekuensi hasil jumlah kunjungan wisatawan asing Kab. Bogor tahun tertentu, murid dapat menentukan pernyataan yang benar"
+  },
+  {
+    "number": 25,
+    "answer_key": "c",
+    "element": "",
+    "sub_element": "",
+    "cognitive_level": "",
+    "context": "",
+    "competency": "",
+    "indicator": ""
+  },
+  {
+    "number": 26,
+    "answer_key": "c",
+    "element": "",
+    "sub_element": "",
+    "cognitive_level": "",
+    "context": "",
+    "competency": "",
+    "indicator": ""
+  },
+  {
+    "number": 27,
+    "answer_key": "b dan c",
+    "element": "",
+    "sub_element": "",
+    "cognitive_level": "",
+    "context": "",
+    "competency": "",
+    "indicator": ""
+  },
+  {
+    "number": 28,
+    "answer_key": "c",
+    "element": "",
+    "sub_element": "",
+    "cognitive_level": "",
+    "context": "",
+    "competency": "",
+    "indicator": ""
+  },
+  {
+    "number": 29,
+    "answer_key": "b",
+    "element": "",
+    "sub_element": "",
+    "cognitive_level": "",
+    "context": "",
+    "competency": "",
+    "indicator": ""
+  },
+  {
+    "number": 30,
+    "answer_key": "a dan c",
+    "element": "",
+    "sub_element": "",
+    "cognitive_level": "",
+    "context": "",
+    "competency": "",
+    "indicator": ""
+  }
+]

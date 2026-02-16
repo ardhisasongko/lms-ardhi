@@ -1,0 +1,362 @@
+[
+  {
+    "number": 1,
+    "topic": "Perbandingan",
+    "question": "Di sebuah kelas, perbandingan jumlah siswa laki-laki dan perempuan adalah 3:5. Jika jumlah seluruh siswa di kelas tersebut adalah 40 orang, berapa selisih jumlah siswa laki-laki dan perempuan?",
+    "options": {
+      "a": "10 orang",
+      "b": "15 orang",
+      "c": "20 orang",
+      "d": "25 orang"
+    },
+    "correct_answer": "a"
+  },
+  {
+    "number": 2,
+    "topic": "Operasi Aritmetika",
+    "question": "Seorang anak meminum air dengan volume sebagai berikut: pagi 250 mL, siang 300 mL, sore 200 mL, dan malam 150 mL. Jika tersedia air 1,5 liter, berapa mL air yang tersisa?",
+    "options": {
+      "a": "400 mL",
+      "b": "500 mL",
+      "c": "600 mL",
+      "d": "700 mL"
+    },
+    "correct_answer": "c"
+  },
+  {
+    "number": 3,
+    "topic": "Bilangan Berpangkat",
+    "question": "Manakah pernyataan yang benar tentang bilangan berpangkat?\\nI. 2³ × 2² = 2⁵\\nII. (3²)³ = 3⁶\\nIII. 5⁴ ÷ 5² = 5²",
+    "options": {
+      "a": "I dan II",
+      "b": "II dan III",
+      "c": "I, II, dan III",
+      "d": "Hanya I"
+    },
+    "correct_answer": "c"
+  },
+  {
+    "number": 4,
+    "topic": "Pecahan",
+    "question": "Hasil dari 2/3 + 3/4 - 1/2 adalah...",
+    "options": {
+      "a": "5/6",
+      "b": "11/12",
+      "c": "7/12",
+      "d": "13/12"
+    },
+    "correct_answer": "b"
+  },
+  {
+    "number": 5,
+    "topic": "Akar dan Pangkat",
+    "question": "Pernyataan manakah yang benar?\\nI. √64 = 8\\nII. √144 = 12\\nIII. ³√27 = 3",
+    "options": {
+      "a": "I dan II",
+      "b": "I, II, dan III",
+      "c": "II dan III",
+      "d": "Hanya III"
+    },
+    "correct_answer": "b"
+  },
+  {
+    "number": 6,
+    "topic": "Bilangan Bulat",
+    "question": "Hasil dari (-15) + 23 - (-8) + (-12) adalah...",
+    "options": {
+      "a": "2",
+      "b": "4",
+      "c": "6",
+      "d": "8"
+    },
+    "correct_answer": "b"
+  },
+  {
+    "number": 7,
+    "topic": "FPB dan KPK",
+    "question": "FPB dari 24, 36, dan 48 adalah...",
+    "options": {
+      "a": "12",
+      "b": "6",
+      "c": "24",
+      "d": "144"
+    },
+    "correct_answer": "a"
+  },
+  {
+    "number": 8,
+    "topic": "Persamaan Linear",
+    "question": "Dalam segitiga ABC, besar sudut A = (2x + 10)°, sudut B = (3x - 5)°, dan sudut C = (x + 25)°. Berapakah besar sudut B?",
+    "options": {
+      "a": "45°",
+      "b": "70°",
+      "c": "55°",
+      "d": "65°"
+    },
+    "correct_answer": "b"
+  },
+  {
+    "number": 9,
+    "topic": "Sistem Persamaan Linear",
+    "question": "Harga 2 buku dan 3 pensil adalah Rp17.000. Harga 3 buku dan 2 pensil adalah Rp18.000. Berapa harga 1 pensil?",
+    "options": {
+      "a": "Rp2.000",
+      "b": "Rp3.000",
+      "c": "Rp4.000",
+      "d": "Rp5.000"
+    },
+    "correct_answer": "b"
+  },
+  {
+    "number": 10,
+    "topic": "Pertidaksamaan Linear",
+    "question": "Penyelesaian dari pertidaksamaan 3x - 7 < 2x + 5 adalah...",
+    "options": {
+      "a": "x < 10",
+      "b": "x < 12",
+      "c": "x > 10",
+      "d": "x > 12"
+    },
+    "correct_answer": "b"
+  },
+  {
+    "number": 11,
+    "topic": "Aljabar Bentuk",
+    "question": "Hasil dari (2x + 3)(x - 4) adalah...",
+    "options": {
+      "a": "2x² - 5x - 12",
+      "b": "2x² + 5x - 12",
+      "c": "2x² - 5x + 12",
+      "d": "2x² + 5x + 12"
+    },
+    "correct_answer": "a"
+  },
+  {
+    "number": 12,
+    "topic": "Barisan Aritmatika",
+    "question": "Suku ke-10 dari barisan aritmatika 5, 8, 11, 14, ... adalah...",
+    "options": {
+      "a": "29",
+      "b": "32",
+      "c": "35",
+      "d": "38"
+    },
+    "correct_answer": "b"
+  },
+  {
+    "number": 13,
+    "topic": "Deret Aritmatika",
+    "question": "Tabungan Ani bertambah Rp50.000 setiap bulan. Jika tabungan awal Rp100.000, berapa tabungan bulan ke-5?",
+    "options": {
+      "a": "Rp250.000",
+      "b": "Rp300.000",
+      "c": "Rp350.000",
+      "d": "Rp400.000"
+    },
+    "correct_answer": "b"
+  },
+  {
+    "number": 14,
+    "topic": "Fungsi",
+    "question": "Jika f(x) = 3x - 5, maka nilai f(4) adalah...",
+    "options": {
+      "a": "5",
+      "b": "7",
+      "c": "9",
+      "d": "11"
+    },
+    "correct_answer": "b"
+  },
+  {
+    "number": 15,
+    "topic": "Sudut",
+    "question": "Sebuah pizza dipotong menjadi 8 bagian sama besar. Jika 3 bagian sudah dimakan, berapa besar sudut pizza yang tersisa?",
+    "options": {
+      "a": "180°",
+      "b": "225°",
+      "c": "270°",
+      "d": "315°"
+    },
+    "correct_answer": "b"
+  },
+  {
+    "number": 16,
+    "topic": "Transformasi Geometri",
+    "question": "Titik A(3, 4) dirotasikan 90° searah jarum jam dengan pusat O(0,0), kemudian didilatasikan dengan faktor skala 2. Koordinat bayangan titik A adalah...",
+    "options": {
+      "a": "(6, -8)",
+      "b": "(8, -6)",
+      "c": "(-8, 6)",
+      "d": "(6, 8)"
+    },
+    "correct_answer": "b"
+  },
+  {
+    "number": 17,
+    "topic": "Luas Permukaan",
+    "question": "Sebuah kotak berbentuk balok dengan ukuran 10 cm × 8 cm × 6 cm akan dicat. Berapa luas permukaan yang akan dicat?",
+    "options": {
+      "a": "376 cm²",
+      "b": "480 cm²",
+      "c": "376 cm²",
+      "d": "296 cm²"
+    },
+    "correct_answer": "a"
+  },
+  {
+    "number": 18,
+    "topic": "Keliling dan Luas",
+    "question": "Sebuah kabel dililitkan pada silinder dengan diameter 14 cm sebanyak 10 lilitan. Jika harga kabel Rp5.000 per meter, berapa biaya total kabel? (π = 22/7)",
+    "options": {
+      "a": "Rp20.000",
+      "b": "Rp22.000",
+      "c": "Rp25.000",
+      "d": "Rp30.000"
+    },
+    "correct_answer": "b"
+  },
+  {
+    "number": 19,
+    "topic": "Teorema Pythagoras",
+    "question": "Tim SAR membentuk segitiga dengan pos A, B, dan C. Jarak AB = 30 m, BC = 40 m, dan AC = 50 m. Luas wilayah segitiga tersebut adalah...",
+    "options": {
+      "a": "500 m²",
+      "b": "600 m²",
+      "c": "700 m²",
+      "d": "800 m²"
+    },
+    "correct_answer": "b"
+  },
+  {
+    "number": 20,
+    "topic": "Volume Bangun Ruang",
+    "question": "Sebuah bangun terdiri dari kubus dengan rusuk 6 cm dan limas dengan tinggi 4 cm di atasnya. Volume total bangun tersebut adalah...",
+    "options": {
+      "a": "216 cm³",
+      "b": "264 cm³",
+      "c": "288 cm³",
+      "d": "312 cm³"
+    },
+    "correct_answer": "b"
+  },
+  {
+    "number": 21,
+    "topic": "Prisma",
+    "question": "Prisma segitiga sama kaki memiliki alas dengan panjang 10 cm, tinggi alas 12 cm, dan tinggi prisma 15 cm. Luas permukaan prisma adalah...",
+    "options": {
+      "a": "540 cm²",
+      "b": "600 cm²",
+      "c": "660 cm²",
+      "d": "720 cm²"
+    },
+    "correct_answer": "c"
+  },
+  {
+    "number": 22,
+    "topic": "Luas Trapesium",
+    "question": "Trapesium ABCD memiliki sisi sejajar AB = 12 cm dan CD = 8 cm dengan tinggi 10 cm. Luas trapesium tersebut adalah...",
+    "options": {
+      "a": "80 cm²",
+      "b": "100 cm²",
+      "c": "120 cm²",
+      "d": "140 cm²"
+    },
+    "correct_answer": "b"
+  },
+  {
+    "number": 23,
+    "topic": "Volume Gabungan",
+    "question": "Hiasan jamur terdiri dari setengah bola dengan diameter 14 cm dan tabung dengan tinggi 10 cm. Volume total hiasan tersebut adalah... (π = 22/7)",
+    "options": {
+      "a": "1.540 cm³",
+      "b": "2.156 cm³",
+      "c": "2.540 cm³",
+      "d": "3.080 cm³"
+    },
+    "correct_answer": "b"
+  },
+  {
+    "number": 24,
+    "topic": "Distribusi Frekuensi",
+    "question": "Tabel menunjukkan kunjungan wisatawan asing ke Kab. Bogor:\\n100-200: 5 orang\\n201-300: 8 orang\\n301-400: 12 orang\\n401-500: 5 orang\\nBerapa median dari data tersebut?",
+    "options": {
+      "a": "250",
+      "b": "300",
+      "c": "325",
+      "d": "350"
+    },
+    "correct_answer": "c"
+  },
+  {
+    "number": 25,
+    "topic": "Interpretasi Data",
+    "question": "Perpustakaan dikunjungi 120 orang pada hari Senin, 150 pada Selasa, 100 pada Rabu, dan 130 pada Kamis. Rata-rata kunjungan per hari adalah...",
+    "options": {
+      "a": "120",
+      "b": "125",
+      "c": "130",
+      "d": "135"
+    },
+    "correct_answer": "b"
+  },
+  {
+    "number": 26,
+    "topic": "Diagram Batang",
+    "question": "Diagram batang menunjukkan ekstrakurikuler: Basket (20), Futsal (25), Voli (15), Badminton (30). Modus dari data tersebut adalah...",
+    "options": {
+      "a": "Basket",
+      "b": "Futsal",
+      "c": "Badminton",
+      "d": "Voli"
+    },
+    "correct_answer": "c"
+  },
+  {
+    "number": 27,
+    "topic": "Ukuran Pemusatan",
+    "question": "Nilai uji kompetensi kelas A: 70, 75, 80, 85, 90. Kelas B: 60, 70, 80, 90, 100. Kelas mana yang lebih stabil?",
+    "options": {
+      "a": "Kelas A",
+      "b": "Kelas B",
+      "c": "Sama stabil",
+      "d": "Tidak dapat ditentukan"
+    },
+    "correct_answer": "a"
+  },
+  {
+    "number": 28,
+    "topic": "Peluang Kejadian",
+    "question": "Himpunan A = {1, 2, 3, 4, 5} dan B = {3, 4, 5, 6, 7}. Jika diambil satu angka acak dari masing-masing himpunan, peluang mendapat angka yang sama adalah...",
+    "options": {
+      "a": "1/5",
+      "b": "2/5",
+      "c": "3/25",
+      "d": "6/25"
+    },
+    "correct_answer": "c"
+  },
+  {
+    "number": 29,
+    "topic": "Peluang Rute",
+    "question": "Dari titik A ke titik B ada 3 rute, dari B ke C ada 2 rute. Banyak cara berbeda dari A ke C melalui B adalah...",
+    "options": {
+      "a": "5",
+      "b": "6",
+      "c": "8",
+      "d": "10"
+    },
+    "correct_answer": "b"
+  },
+  {
+    "number": 30,
+    "topic": "Kombinasi Peluang",
+    "question": "Dalam sebuah kotak terdapat 5 bola merah dan 3 bola biru. Jika diambil 2 bola sekaligus, peluang terambil 1 merah dan 1 biru adalah...",
+    "options": {
+      "a": "15/28",
+      "b": "15/56",
+      "c": "3/8",
+      "d": "5/14"
+    },
+    "correct_answer": "a"
+  }
+]

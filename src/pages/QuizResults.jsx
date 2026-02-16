@@ -1,9 +1,14 @@
 import { useLocation, useNavigate, Link } from 'react-router-dom';
 import { useEffect } from 'react';
+import { exportQuizResultToPDF } from '../services/ExportService';
+import { useAuth } from '../context/AuthContext';
+import { Download } from 'lucide-react';
+import toast from 'react-hot-toast';
 
 const QuizResults = () => {
   const location = useLocation();
   const navigate = useNavigate();
+  const { user } = useAuth();
   const { results, lesson, answers, quizzes } = location.state || {};
 
   useEffect(() => {
@@ -120,20 +125,18 @@ const QuizResults = () => {
               return (
                 <div
                   key={index}
-                  className={`p-3 sm:p-4 rounded-lg border-2 ${
-                    isCorrect
-                      ? 'border-green-200 bg-green-50'
-                      : 'border-red-200 bg-red-50'
-                  }`}
+                  className={`p-3 sm:p-4 rounded-lg border-2 ${isCorrect
+                    ? 'border-green-200 bg-green-50'
+                    : 'border-red-200 bg-red-50'
+                    }`}
                 >
                   {/* Question Header */}
                   <div className='flex items-start justify-between mb-2 sm:mb-3'>
                     <span
-                      className={`inline-flex items-center px-2 sm:px-3 py-0.5 sm:py-1 rounded-full text-xs sm:text-sm font-medium ${
-                        isCorrect
-                          ? 'bg-green-100 text-green-700'
-                          : 'bg-red-100 text-red-700'
-                      }`}
+                      className={`inline-flex items-center px-2 sm:px-3 py-0.5 sm:py-1 rounded-full text-xs sm:text-sm font-medium ${isCorrect
+                        ? 'bg-green-100 text-green-700'
+                        : 'bg-red-100 text-red-700'
+                        }`}
                     >
                       {isCorrect ? (
                         <>
@@ -208,13 +211,12 @@ const QuizResults = () => {
                         >
                           <div className='flex items-center'>
                             <span
-                              className={`w-5 h-5 sm:w-7 sm:h-7 rounded-full flex items-center justify-center text-xs sm:text-sm font-medium mr-2 sm:mr-3 flex-shrink-0 ${
-                                isCorrectAnswer
-                                  ? 'bg-green-500 text-white'
-                                  : isUserAnswer && !isCorrect
-                                    ? 'bg-red-500 text-white'
-                                    : 'bg-gray-200 text-gray-600'
-                              }`}
+                              className={`w-5 h-5 sm:w-7 sm:h-7 rounded-full flex items-center justify-center text-xs sm:text-sm font-medium mr-2 sm:mr-3 flex-shrink-0 ${isCorrectAnswer
+                                ? 'bg-green-500 text-white'
+                                : isUserAnswer && !isCorrect
+                                  ? 'bg-red-500 text-white'
+                                  : 'bg-gray-200 text-gray-600'
+                                }`}
                             >
                               {optionLabels[optIndex]}
                             </span>
@@ -296,6 +298,24 @@ const QuizResults = () => {
             <span className='hidden sm:inline'>Kembali ke Pembahasan</span>
             <span className='sm:hidden'>Pembahasan</span>
           </Link>
+
+          <button
+            onClick={() => {
+              toast.promise(
+                Promise.resolve(exportQuizResultToPDF(results, lesson?.title || 'Quiz', user?.name || 'Student')),
+                {
+                  loading: 'Mengunduh laporan...',
+                  success: 'Laporan berhasil diunduh!',
+                  error: 'Gagal mengunduh laporan',
+                }
+              );
+            }}
+            className='btn-outline flex items-center justify-center text-sm sm:text-base px-3 sm:px-4 py-2 text-blue-600 border-blue-600 hover:bg-blue-50'
+          >
+            <Download size={20} className="mr-2" />
+            <span className='hidden sm:inline'>Download PDF</span>
+            <span className='sm:hidden'>PDF</span>
+          </button>
 
           {!passed && (
             <Link

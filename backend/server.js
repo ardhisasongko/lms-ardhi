@@ -12,7 +12,10 @@ import progressRoutes from './routes/progress.js';
 // Load environment variables
 dotenv.config();
 
+import { supabase } from './services/supabase.js';
+
 const app = express();
+app.locals.supabase = supabase;
 const PORT = process.env.PORT || 5000;
 
 // Middleware

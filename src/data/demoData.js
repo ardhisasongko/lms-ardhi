@@ -238,7 +238,7 @@ export const DEMO_LESSONS = [
     id: 'lesson-12',
     module_id: 'mod-7',
     title: 'Aritmatika dan Aljabar Dasar',
-    youtube_url: 'https://www.youtube.com/watch?v=wIuVvCuiJhU',
+    youtube_url: 'https://www.youtube.com/watch?v=KwJ_HMedAFQ', // contoh video numerasi
     summary:
       'Review konsep aritmatika dan aljabar yang sering muncul di soal TKA.',
     order: 1,
@@ -260,7 +260,7 @@ export const DEMO_LESSONS = [
     id: 'lesson-14',
     module_id: 'mod-9',
     title: 'Teknik Membaca Kritis',
-    youtube_url: 'https://www.youtube.com/watch?v=RGOj5yH7evk',
+    youtube_url: 'https://www.youtube.com/watch?v=KwJ_HMedAFQ', // sama dengan video demo literasi
     summary:
       'Strategi membaca kritis untuk menganalisis teks dan menjawab soal literasi bahasa Indonesia.',
     order: 1,

@@ -50,9 +50,10 @@ export const AuthProvider = ({ children }) => {
       const token = localStorage.getItem('token');
       const storedUser = localStorage.getItem('user');
       const isDemo = localStorage.getItem('isDemo') === 'true';
+      const lastVerified = localStorage.getItem('lastVerified');
 
       if (token && storedUser) {
-        // Demo mode: just restore user from localStorage
+        // Demo mode: just restore user from localStorage (instant)
         if (isDemo) {
           try {
             setUser(JSON.parse(storedUser));
@@ -65,15 +66,32 @@ export const AuthProvider = ({ children }) => {
           return;
         }
 
-        // Real mode: verify token with backend
+        // OPTIMIZED: Real mode - skip verification if recently verified (<1 hour)
+        const now = Date.now();
+        const oneHour = 60 * 60 * 1000;
+
+        if (lastVerified && now - parseInt(lastVerified) < oneHour) {
+          // Recently verified, skip API call (instant)
+          try {
+            setUser(JSON.parse(storedUser));
+          } catch (e) {
+            localStorage.clear();
+          }
+          setLoading(false);
+          return;
+        }
+
+        // Verify with backend (only if >1 hour old or never verified)
         try {
           const response = await api.getProfile();
           setUser(response.data.user);
+          localStorage.setItem('lastVerified', now.toString());
         } catch (err) {
           // Token invalid, clear storage
           localStorage.removeItem('token');
           localStorage.removeItem('user');
           localStorage.removeItem('isDemo');
+          localStorage.removeItem('lastVerified');
         }
       }
       setLoading(false);
@@ -86,7 +104,27 @@ export const AuthProvider = ({ children }) => {
     try {
       setError(null);
 
-      // Try backend first
+      // OPTIMIZED: Check demo users first (instant, no network call)
+      const demoUser = DEMO_USERS.find(
+        (u) =>
+          u.email.toLowerCase() === email.toLowerCase() &&
+          u.password === password,
+      );
+
+      if (demoUser) {
+        // Demo login (instant)
+        const { password: _, ...userWithoutPassword } = demoUser;
+        const demoToken = 'demo-token-' + demoUser.id;
+
+        localStorage.setItem('token', demoToken);
+        localStorage.setItem('user', JSON.stringify(userWithoutPassword));
+        localStorage.setItem('isDemo', 'true');
+        setUser(userWithoutPassword);
+
+        return { success: true, isDemo: true };
+      }
+
+      // Real backend login (only if not demo)
       try {
         const response = await api.login(email, password);
         const { user, token } = response.data;
@@ -94,31 +132,13 @@ export const AuthProvider = ({ children }) => {
         localStorage.setItem('token', token);
         localStorage.setItem('user', JSON.stringify(user));
         localStorage.setItem('isDemo', 'false');
+        localStorage.setItem('lastVerified', Date.now().toString());
         setUser(user);
 
         return { success: true };
-      } catch (backendErr) {
-        // Backend failed, try demo login
-        const demoUser = DEMO_USERS.find(
-          (u) =>
-            u.email.toLowerCase() === email.toLowerCase() &&
-            u.password === password,
-        );
-
-        if (demoUser) {
-          const { password: _, ...userWithoutPassword } = demoUser;
-          const demoToken = 'demo-token-' + demoUser.id;
-
-          localStorage.setItem('token', demoToken);
-          localStorage.setItem('user', JSON.stringify(userWithoutPassword));
-          localStorage.setItem('isDemo', 'true');
-          setUser(userWithoutPassword);
-
-          return { success: true, isDemo: true };
-        }
-
-        // Neither backend nor demo login worked
-        throw backendErr;
+      } catch (err) {
+        setError(err.message);
+        return { success: false, error: err.message };
       }
     } catch (err) {
       setError(err.message);
@@ -131,35 +151,18 @@ export const AuthProvider = ({ children }) => {
       setError(null);
 
       // Try backend first
-      try {
-        const response = await api.register(name, email, password, role);
-        const { user, token } = response.data;
+      const response = await api.register(name, email, password, role);
+      const { user, token } = response.data;
 
-        localStorage.setItem('token', token);
-        localStorage.setItem('user', JSON.stringify(user));
-        localStorage.setItem('isDemo', 'false');
-        setUser(user);
+      localStorage.setItem('token', token);
+      localStorage.setItem('user', JSON.stringify(user));
+      localStorage.setItem('isDemo', 'false');
+      setUser(user);
 
-        return { success: true };
-      } catch (backendErr) {
-        // Backend failed, create demo user
-        const newUser = {
-          id: 'demo-user-' + Date.now(),
-          name,
-          email,
-          role,
-          created_at: new Date().toISOString(),
-        };
-        const demoToken = 'demo-token-' + newUser.id;
-
-        localStorage.setItem('token', demoToken);
-        localStorage.setItem('user', JSON.stringify(newUser));
-        localStorage.setItem('isDemo', 'true');
-        setUser(newUser);
-
-        return { success: true, isDemo: true };
-      }
+      return { success: true };
     } catch (err) {
+      // CRITICAL FIX: No longer falling back to demo user automatically
+      // This prevents user confusion about account status
       setError(err.message);
       return { success: false, error: err.message };
     }

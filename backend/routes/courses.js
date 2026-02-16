@@ -52,15 +52,16 @@ router.get('/', optionalAuth, async (req, res) => {
     const courseIds = courses.map((c) => c.id);
     let moduleCounts = [];
     if (courseIds.length > 0) {
-      const { data: moduleAgg, error: moduleAggError } =
+      const { data: modules, error: modulesError } =
         await req.app.locals.supabase
           .from(TABLES.MODULES)
-          .select('course_id, count:id')
-          .in('course_id', courseIds)
-          .group('course_id');
-      if (moduleAggError) throw moduleAggError;
-      moduleCounts = moduleAgg.reduce((acc, cur) => {
-        acc[cur.course_id] = cur.count;
+          .select('course_id')
+          .in('course_id', courseIds);
+
+      if (modulesError) throw modulesError;
+
+      moduleCounts = modules.reduce((acc, cur) => {
+        acc[cur.course_id] = (acc[cur.course_id] || 0) + 1;
         return acc;
       }, {});
     }
@@ -95,11 +96,15 @@ router.get('/', optionalAuth, async (req, res) => {
 
 /**
  * GET /api/courses/categories
- * Get all unique categories
+ * Get all unique categories (OPTIMIZED)
  */
 router.get('/categories', async (req, res) => {
   try {
-    const courses = await getSheetData(TABLES.COURSES);
+    // OPTIMIZED: Only fetch category field instead of all course data
+    const { data: courses } = await req.app.locals.supabase
+      .from(TABLES.COURSES)
+      .select('category');
+
     const categories = [...new Set(courses.map((course) => course.category))];
 
     res.json({
@@ -117,50 +122,84 @@ router.get('/categories', async (req, res) => {
 
 /**
  * GET /api/courses/:id
- * Get course with modules and lessons
+ * Get course with modules and lessons (OPTIMIZED)
  */
 router.get('/:id', optionalAuth, async (req, res) => {
   try {
     const { id } = req.params;
 
-    // Get course
-    const course = await findByColumn(TABLES.COURSES, 'id', id);
-    if (!course) {
+    // OPTIMIZED: Single query with nested relations (modules + lessons)
+    const { data: courseData, error: courseError } = await req.app.locals.supabase
+      .from(TABLES.COURSES)
+      .select(`
+        *,
+        modules:modules(
+          *,
+          lessons:lessons(
+            id,
+            title,
+            content,
+            video_url,
+            duration,
+            order_index,
+            module_id,
+            course_id
+          )
+        )
+      `)
+      .eq('id', id)
+      .single();
+
+    if (courseError) {
+      if (courseError.code === 'PGRST116') {
+        return res.status(404).json({
+          success: false,
+          message: 'Course not found',
+        });
+      }
+      throw courseError;
+    }
+
+    if (!courseData) {
       return res.status(404).json({
         success: false,
         message: 'Course not found',
       });
     }
 
-    // Get modules for this course
-    const allModules = await getSheetData(TABLES.MODULES);
-    const modules = allModules
-      .filter((module) => module.course_id === id)
-      .sort((a, b) => parseInt(a.order_index) - parseInt(b.order_index));
+    // Sort modules and lessons by order_index
+    if (courseData.modules) {
+      courseData.modules.sort((a, b) => parseInt(a.order_index) - parseInt(b.order_index));
+      courseData.modules.forEach((module) => {
+        if (module.lessons) {
+          module.lessons.sort((a, b) => parseInt(a.order_index) - parseInt(b.order_index));
+        }
+      });
+    }
 
-    // Get lessons for each module
-    const allLessons = await getSheetData(TABLES.LESSONS);
-    const modulesWithLessons = modules.map((module) => ({
-      ...module,
-      lessons: allLessons
-        .filter((lesson) => lesson.module_id === module.id)
-        .sort((a, b) => parseInt(a.order_index) - parseInt(b.order_index)),
-    }));
-
-    // Get user progress if authenticated
+    // OPTIMIZED: Get user progress with single filtered query (if authenticated)
     let userProgress = [];
     if (req.user) {
-      const allProgress = await getSheetData(TABLES.USER_PROGRESS);
-      userProgress = allProgress.filter((p) => p.user_id === req.user.id);
+      // Extract all lesson IDs from the course
+      const lessonIds = courseData.modules
+        .flatMap((m) => m.lessons || [])
+        .map((l) => l.id);
+
+      if (lessonIds.length > 0) {
+        const { data: progressData } = await req.app.locals.supabase
+          .from(TABLES.USER_PROGRESS)
+          .select('*')
+          .eq('user_id', req.user.id)
+          .in('lesson_id', lessonIds);
+
+        userProgress = progressData || [];
+      }
     }
 
     res.json({
       success: true,
       data: {
-        course: {
-          ...course,
-          modules: modulesWithLessons,
-        },
+        course: courseData,
         userProgress,
       },
     });

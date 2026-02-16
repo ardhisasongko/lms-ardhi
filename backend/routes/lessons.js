@@ -17,85 +17,111 @@ const router = express.Router();
 
 /**
  * GET /api/lessons/:id
- * Get a specific lesson with quiz questions
+ * Get a specific lesson with quiz questions (OPTIMIZED)
  */
 router.get('/:id', optionalAuth, async (req, res) => {
   try {
     const { id } = req.params;
 
-    // Get lesson
-    const lesson = await findByColumn(TABLES.LESSONS, 'id', id);
-    if (!lesson) {
+    // OPTIMIZED: Single query with joins for lesson, module, and course
+    const { data: lessonData, error: lessonError } = await req.app.locals.supabase
+      .from(TABLES.LESSONS)
+      .select(`
+        *,
+        module:modules(
+          id,
+          title,
+          course_id,
+          order_index,
+          course:courses(
+            id,
+            title
+          )
+        )
+      `)
+      .eq('id', id)
+      .single();
+
+    if (lessonError) {
+      if (lessonError.code === 'PGRST116') {
+        return res.status(404).json({
+          success: false,
+          message: 'Lesson not found',
+        });
+      }
+      throw lessonError;
+    }
+
+    if (!lessonData) {
       return res.status(404).json({
         success: false,
         message: 'Lesson not found',
       });
     }
 
-    // Get quiz questions for this lesson
-    const allQuizzes = await getSheetData(TABLES.QUIZZES);
-    const lessonQuiz = allQuizzes.find((quiz) => quiz.lesson_id === id);
+    // OPTIMIZED: Get quiz with single filtered query
+    const { data: quizData } = await req.app.locals.supabase
+      .from(TABLES.QUIZZES)
+      .select('*')
+      .eq('lesson_id', id)
+      .maybeSingle();
 
     // Extract questions from the questions JSONB field
     let quizzes = [];
-    if (lessonQuiz && lessonQuiz.questions) {
-      // Handle both array and already-parsed questions
+    if (quizData && quizData.questions) {
       const questionsData =
-        typeof lessonQuiz.questions === 'string'
-          ? JSON.parse(lessonQuiz.questions)
-          : lessonQuiz.questions;
+        typeof quizData.questions === 'string'
+          ? JSON.parse(quizData.questions)
+          : quizData.questions;
 
       quizzes = questionsData.map((q, index) => ({
-        id: `${lessonQuiz.id}-q${index}`,
+        id: `${quizData.id}-q${index}`,
         question: q.question,
-        options: q.options, // Array format: ['opt1', 'opt2', 'opt3', 'opt4']
-        correctIndex: q.correctIndex, // Store for backend validation
+        options: q.options,
+        correctIndex: q.correctIndex,
       }));
     }
 
-    // Get user progress if authenticated
+    // OPTIMIZED: Get user progress with single filtered query (if authenticated)
     let userProgress = null;
     if (req.user) {
-      const allProgress = await getSheetData(TABLES.USER_PROGRESS);
-      userProgress =
-        allProgress.find(
-          (p) => p.user_id === req.user.id && p.lesson_id === id,
-        ) || null;
+      const { data: progressData } = await req.app.locals.supabase
+        .from(TABLES.USER_PROGRESS)
+        .select('*')
+        .eq('user_id', req.user.id)
+        .eq('lesson_id', id)
+        .maybeSingle();
+
+      userProgress = progressData || null;
     }
 
-    // Get module info
-    const module = await findByColumn(TABLES.MODULES, 'id', lesson.module_id);
-
-    // Get course info
-    let course = null;
-    if (module) {
-      course = await findByColumn(TABLES.COURSES, 'id', module.course_id);
-    }
-
-    // Get next and previous lessons
+    // OPTIMIZED: Get prev/next lessons with single filtered query
     let prevLesson = null;
     let nextLesson = null;
 
-    if (module) {
-      const allLessons = await getSheetData(TABLES.LESSONS);
-      const moduleLessons = allLessons
-        .filter((l) => l.module_id === lesson.module_id)
-        .sort((a, b) => parseInt(a.order_index) - parseInt(b.order_index));
+    if (lessonData.module) {
+      const { data: moduleLessons } = await req.app.locals.supabase
+        .from(TABLES.LESSONS)
+        .select('id, title, order_index')
+        .eq('module_id', lessonData.module_id)
+        .order('order_index');
 
-      const currentIndex = moduleLessons.findIndex((l) => l.id === id);
+      if (moduleLessons && moduleLessons.length > 0) {
+        const currentIndex = moduleLessons.findIndex((l) => l.id === id);
 
-      if (currentIndex > 0) {
-        prevLesson = {
-          id: moduleLessons[currentIndex - 1].id,
-          title: moduleLessons[currentIndex - 1].title,
-        };
-      }
+        if (currentIndex > 0) {
+          prevLesson = {
+            id: moduleLessons[currentIndex - 1].id,
+            title: moduleLessons[currentIndex - 1].title,
+          };
+        }
 
-      if (currentIndex < moduleLessons.length - 1) {
-        nextLesson = {
-          id: moduleLessons[currentIndex + 1].id,
-          title: moduleLessons[currentIndex + 1].title,
-        };
+        if (currentIndex < moduleLessons.length - 1) {
+          nextLesson = {
+            id: moduleLessons[currentIndex + 1].id,
+            title: moduleLessons[currentIndex + 1].title,
+          };
+        }
       }
     }
 
@@ -103,9 +129,13 @@ router.get('/:id', optionalAuth, async (req, res) => {
       success: true,
       data: {
         lesson: {
-          ...lesson,
-          module: module ? { id: module.id, title: module.title } : null,
-          course: course ? { id: course.id, title: course.title } : null,
+          ...lessonData,
+          module: lessonData.module
+            ? { id: lessonData.module.id, title: lessonData.module.title }
+            : null,
+          course: lessonData.module?.course
+            ? { id: lessonData.module.course.id, title: lessonData.module.course.title }
+            : null,
         },
         quizzes,
         userProgress,

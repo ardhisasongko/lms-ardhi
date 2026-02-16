@@ -3,6 +3,7 @@ import { useParams, useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import api from '../services/api';
 import Loading from '../components/Loading';
+import toast from 'react-hot-toast';
 
 const QuizPage = () => {
   const { lessonId } = useParams();
@@ -41,6 +42,34 @@ const QuizPage = () => {
   const allQuestionsAnswered =
     Object.keys(selectedAnswers).length === totalQuestions;
 
+  // Load saved state on mount
+  useEffect(() => {
+    const savedState = sessionStorage.getItem(`quiz_progress_${lessonId}`);
+    if (savedState) {
+      try {
+        const parsed = JSON.parse(savedState);
+        setSelectedAnswers(parsed.selectedAnswers || {});
+        setCurrentQuestionIndex(parsed.currentQuestionIndex || 0);
+        toast.success('Progress latihan soal dipulihkan', { id: 'restore-progress' });
+      } catch (e) {
+        console.error('Failed to restore quiz progress', e);
+        sessionStorage.removeItem(`quiz_progress_${lessonId}`);
+      }
+    }
+  }, [lessonId]);
+
+  // Save state on change
+  useEffect(() => {
+    if (Object.keys(selectedAnswers).length > 0 || currentQuestionIndex > 0) {
+      const stateToSave = {
+        selectedAnswers,
+        currentQuestionIndex,
+        timestamp: Date.now()
+      };
+      sessionStorage.setItem(`quiz_progress_${lessonId}`, JSON.stringify(stateToSave));
+    }
+  }, [selectedAnswers, currentQuestionIndex, lessonId]);
+
   const handleSelectAnswer = (answerIndex) => {
     const newAnswers = { ...selectedAnswers };
     newAnswers[currentQuestionId] = answerIndex;
@@ -61,12 +90,13 @@ const QuizPage = () => {
 
   const handleSubmit = async () => {
     if (!allQuestionsAnswered) {
-      setError('Silakan jawab semua pertanyaan terlebih dahulu');
+      toast.error('Silakan jawab semua pertanyaan terlebih dahulu');
       return;
     }
 
     setSubmitting(true);
     setError('');
+    const toastId = toast.loading('Mengirim jawaban...');
 
     try {
       const answersArray = Object.entries(selectedAnswers).map(
@@ -76,7 +106,23 @@ const QuizPage = () => {
         }),
       );
 
+      // Debug logging
+      console.log('=== QUIZ SUBMISSION DEBUG ===');
+      console.log('Lesson ID:', lessonId);
+      console.log('Total questions:', totalQuestions);
+      console.log('Answers count:', answersArray.length);
+      console.log('Sample answer:', answersArray[0]);
+      console.log('All quiz IDs:', quizzes.map(q => q.id));
+      console.log('============================');
+
       const response = await api.submitQuiz(lessonId, answersArray);
+
+      console.log('✅ Submission successful!', response.data);
+
+      // Clear saved progress on success
+      sessionStorage.removeItem(`quiz_progress_${lessonId}`);
+
+      toast.success('Latihan soal berhasil dikirim!', { id: toastId });
 
       // Navigate to results page with the result data
       navigate(`/quiz-results/${lessonId}`, {
@@ -88,8 +134,21 @@ const QuizPage = () => {
         },
       });
     } catch (err) {
-      console.error('Submit error:', err);
-      setError('Gagal submit latihan soal. Silakan coba lagi.');
+      console.error('❌ Submit error:', err);
+      console.error('Error message:', err.message);
+      console.error('Error response:', err.response);
+
+      // More detailed error message
+      let errorMsg = 'Gagal submit latihan soal. ';
+      if (err.message.includes('401') || err.message.includes('Unauthorized')) {
+        errorMsg += 'Silakan login kembali.';
+      } else if (err.message.includes('Network')) {
+        errorMsg += 'Periksa koneksi internet Anda.';
+      } else {
+        errorMsg += 'Silakan coba lagi.';
+      }
+      setError(errorMsg);
+      toast.error(errorMsg, { id: toastId });
     } finally {
       setSubmitting(false);
     }
@@ -206,13 +265,12 @@ const QuizPage = () => {
               <button
                 key={index}
                 onClick={() => setCurrentQuestionIndex(index)}
-                className={`w-7 h-7 sm:w-10 sm:h-10 rounded-full text-xs sm:text-sm font-medium transition-all ${
-                  isCurrent
-                    ? 'bg-primary-600 text-white'
-                    : isAnswered
-                      ? 'bg-green-500 text-white'
-                      : 'bg-gray-200 text-gray-600 hover:bg-gray-300'
-                }`}
+                className={`w-7 h-7 sm:w-10 sm:h-10 rounded-full text-xs sm:text-sm font-medium transition-all ${isCurrent
+                  ? 'bg-primary-600 text-white'
+                  : isAnswered
+                    ? 'bg-green-500 text-white'
+                    : 'bg-gray-200 text-gray-600 hover:bg-gray-300'
+                  }`}
               >
                 {index + 1}
               </button>
@@ -241,19 +299,17 @@ const QuizPage = () => {
                 <button
                   key={index}
                   onClick={() => handleSelectAnswer(index)}
-                  className={`w-full p-3 sm:p-4 rounded-lg border-2 text-left transition-all ${
-                    isSelected
-                      ? 'border-primary-500 bg-primary-50 text-primary-900'
-                      : 'border-gray-200 hover:border-gray-300 hover:bg-gray-50'
-                  }`}
+                  className={`w-full p-3 sm:p-4 rounded-lg border-2 text-left transition-all ${isSelected
+                    ? 'border-primary-500 bg-primary-50 text-primary-900'
+                    : 'border-gray-200 hover:border-gray-300 hover:bg-gray-50'
+                    }`}
                 >
                   <div className='flex items-start'>
                     <span
-                      className={`w-6 h-6 sm:w-8 sm:h-8 rounded-full flex items-center justify-center text-xs sm:text-sm font-medium mr-2 sm:mr-3 flex-shrink-0 ${
-                        isSelected
-                          ? 'bg-primary-500 text-white'
-                          : 'bg-gray-100 text-gray-600'
-                      }`}
+                      className={`w-6 h-6 sm:w-8 sm:h-8 rounded-full flex items-center justify-center text-xs sm:text-sm font-medium mr-2 sm:mr-3 flex-shrink-0 ${isSelected
+                        ? 'bg-primary-500 text-white'
+                        : 'bg-gray-100 text-gray-600'
+                        }`}
                     >
                       {optionLabels[index]}
                     </span>
@@ -279,11 +335,10 @@ const QuizPage = () => {
           <button
             onClick={handlePrevQuestion}
             disabled={currentQuestionIndex === 0}
-            className={`flex items-center px-2 sm:px-4 py-2 rounded-lg text-xs sm:text-base font-medium transition-colors ${
-              currentQuestionIndex === 0
-                ? 'text-gray-400 cursor-not-allowed'
-                : 'text-gray-600 hover:bg-gray-100'
-            }`}
+            className={`flex items-center px-2 sm:px-4 py-2 rounded-lg text-xs sm:text-base font-medium transition-colors ${currentQuestionIndex === 0
+              ? 'text-gray-400 cursor-not-allowed'
+              : 'text-gray-600 hover:bg-gray-100'
+              }`}
           >
             <svg
               className='w-4 h-4 sm:w-5 sm:h-5 mr-1 sm:mr-2'
@@ -328,11 +383,10 @@ const QuizPage = () => {
               <button
                 onClick={handleSubmit}
                 disabled={!allQuestionsAnswered || submitting}
-                className={`flex items-center px-3 sm:px-6 py-2 rounded-lg text-xs sm:text-base font-medium transition-colors ${
-                  allQuestionsAnswered && !submitting
-                    ? 'bg-green-600 text-white hover:bg-green-700'
-                    : 'bg-gray-300 text-gray-500 cursor-not-allowed'
-                }`}
+                className={`flex items-center px-3 sm:px-6 py-2 rounded-lg text-xs sm:text-base font-medium transition-colors ${allQuestionsAnswered && !submitting
+                  ? 'bg-green-600 text-white hover:bg-green-700'
+                  : 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                  }`}
               >
                 {submitting ? (
                   <>
@@ -395,11 +449,10 @@ const QuizPage = () => {
               return (
                 <div
                   key={index}
-                  className={`w-full aspect-square rounded flex items-center justify-center text-[10px] sm:text-xs font-medium ${
-                    isAnswered
-                      ? 'bg-green-100 text-green-700'
-                      : 'bg-gray-100 text-gray-500'
-                  }`}
+                  className={`w-full aspect-square rounded flex items-center justify-center text-[10px] sm:text-xs font-medium ${isAnswered
+                    ? 'bg-green-100 text-green-700'
+                    : 'bg-gray-100 text-gray-500'
+                    }`}
                 >
                   {index + 1}
                 </div>

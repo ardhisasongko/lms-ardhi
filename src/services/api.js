@@ -1,4 +1,9 @@
-const API_BASE_URL = 'https://tka-ardhi-production.up.railway.app';
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000';
+
+// OPTIMIZATION: In-memory cache for API responses
+const cache = new Map();
+const CACHE_DURATION = 5 * 60 * 1000; // 5 minutes
+
 /**
  * API helper functions for the LMS
  */
@@ -27,8 +32,13 @@ class ApiService {
     if (!response.ok) {
       if (response.status === 401) {
         // Token expired or invalid
+        console.warn('⚠️ Token expired or invalid. Redirecting to login...');
         localStorage.removeItem('token');
         localStorage.removeItem('user');
+
+        // Show alert before redirect
+        alert('Sesi Anda telah berakhir. Silakan login kembali.');
+
         window.location.href = '/login';
       }
       throw new Error(data.message || 'An error occurred');
@@ -38,14 +48,32 @@ class ApiService {
   }
 
   /**
-   * Make GET request
+   * Make GET request with caching
    */
-  async get(endpoint) {
+  async get(endpoint, useCache = true) {
+    // Check cache first
+    if (useCache && cache.has(endpoint)) {
+      const { data, timestamp } = cache.get(endpoint);
+      if (Date.now() - timestamp < CACHE_DURATION) {
+        console.log(`📦 Cache hit: ${endpoint}`);
+        return data;
+      }
+      // Cache expired, remove it
+      cache.delete(endpoint);
+    }
+
     const response = await fetch(`${this.baseUrl}${endpoint}`, {
       method: 'GET',
       headers: this.getHeaders(),
     });
-    return this.handleResponse(response);
+    const data = await this.handleResponse(response);
+
+    // Store in cache
+    if (useCache) {
+      cache.set(endpoint, { data, timestamp: Date.now() });
+    }
+
+    return data;
   }
 
   /**

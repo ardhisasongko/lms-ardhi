@@ -11,7 +11,7 @@ const router = express.Router();
 
 /**
  * GET /api/progress/:userId
- * Get user progress (all lessons)
+ * Get user progress (all lessons) - OPTIMIZED
  */
 router.get('/:userId', authenticateToken, async (req, res) => {
   try {
@@ -25,49 +25,51 @@ router.get('/:userId', authenticateToken, async (req, res) => {
       });
     }
 
-    // Get all progress for user
-    const userProgress = await filterByColumn(
-      TABLES.USER_PROGRESS,
-      'user_id',
-      userId,
-    );
+    // OPTIMIZED: Single query with joins for progress + lesson + module + course
+    const { data: userProgress } = await req.app.locals.supabase
+      .from(TABLES.USER_PROGRESS)
+      .select(`
+        *,
+        lesson:lessons(
+          id,
+          title,
+          module:modules(
+            id,
+            title,
+            course:courses(
+              id,
+              title
+            )
+          )
+        )
+      `)
+      .eq('user_id', userId);
 
-    // Enrich with lesson and course info
-    const lessons = await getSheetData(TABLES.LESSONS);
-    const modules = await getSheetData(TABLES.MODULES);
-    const courses = await getSheetData(TABLES.COURSES);
+    // Transform the data structure
+    const enrichedProgress = userProgress.map((progress) => ({
+      ...progress,
+      lesson: progress.lesson ? { id: progress.lesson.id, title: progress.lesson.title } : null,
+      module: progress.lesson?.module
+        ? { id: progress.lesson.module.id, title: progress.lesson.module.title }
+        : null,
+      course: progress.lesson?.module?.course
+        ? { id: progress.lesson.module.course.id, title: progress.lesson.module.course.title }
+        : null,
+    }));
 
-    const enrichedProgress = userProgress.map((progress) => {
-      const lesson = lessons.find((l) => l.id === progress.lesson_id);
-      let module = null;
-      let course = null;
-
-      if (lesson) {
-        module = modules.find((m) => m.id === lesson.module_id);
-        if (module) {
-          course = courses.find((c) => c.id === module.course_id);
-        }
-      }
-
-      return {
-        ...progress,
-        lesson: lesson ? { id: lesson.id, title: lesson.title } : null,
-        module: module ? { id: module.id, title: module.title } : null,
-        course: course ? { id: course.id, title: course.title } : null,
-      };
-    });
+    // OPTIMIZED: Get total lessons count with single query
+    const { count: totalLessons } = await req.app.locals.supabase
+      .from(TABLES.LESSONS)
+      .select('*', { count: 'exact', head: true });
 
     // Calculate overall statistics
-    const totalLessons = lessons.length;
-    const completedLessons = userProgress.filter(
-      (p) => p.completed === true,
-    ).length;
+    const completedLessons = userProgress.filter((p) => p.completed === true).length;
     const averageScore =
       userProgress.length > 0
         ? Math.round(
-            userProgress.reduce((acc, p) => acc + parseInt(p.score || 0), 0) /
-              userProgress.length,
-          )
+          userProgress.reduce((acc, p) => acc + parseInt(p.score || 0), 0) /
+          userProgress.length,
+        )
         : 0;
 
     res.json({
@@ -82,8 +84,7 @@ router.get('/:userId', authenticateToken, async (req, res) => {
               ? Math.round((completedLessons / totalLessons) * 100)
               : 0,
           averageScore,
-          inProgressCount: userProgress.filter((p) => p.completed === false)
-            .length,
+          inProgressCount: userProgress.filter((p) => p.completed === false).length,
         },
       },
     });

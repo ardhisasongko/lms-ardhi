@@ -45,7 +45,7 @@ const Register = () => {
   };
 
   return (
-    <div className='min-h-screen flex items-center justify-center bg-gradient-to-br from-primary-50 via-secondary-50 to-accent-50 py-12 px-4 relative overflow-hidden'>
+    <div className='min-h-screen flex items-center justify-center bg-gradient-to-br from-primary-50 via-secondary-50 to-accent-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 py-12 px-4 relative overflow-hidden transition-colors'>
       {/* Decorative Blobs */}
       <div className='absolute top-0 right-0 w-64 h-64 bg-secondary-300 rounded-full mix-blend-multiply filter blur-3xl opacity-20' />
       <div className='absolute bottom-0 left-0 w-64 h-64 bg-primary-300 rounded-full mix-blend-multiply filter blur-3xl opacity-20' />
@@ -71,15 +71,15 @@ const Register = () => {
             </div>
             <span className='text-2xl font-bold text-gradient'>TKA Master</span>
           </Link>
-          <h1 className='text-3xl font-bold text-gray-900'>Buat Akun Baru</h1>
-          <p className='text-gray-600 mt-2'>
+          <h1 className='text-3xl font-bold text-gray-900 dark:text-white'>Buat Akun Baru</h1>
+          <p className='text-gray-600 dark:text-gray-300 mt-2'>
             Daftar untuk mulai persiapan TKA sekarang
           </p>
         </div>
 
         <div className='card p-8 shadow-xl'>
           {error && (
-            <div className='mb-6 p-4 bg-red-50 border border-red-200 rounded-lg text-red-700 text-sm'>
+            <div className='mb-6 p-4 bg-red-50 dark:bg-red-900/30 border border-red-200 dark:border-red-800 rounded-lg text-red-700 dark:text-red-300 text-sm'>
               {error}
             </div>
           )}
@@ -281,11 +281,11 @@ const Register = () => {
           </form>
 
           <div className='mt-6 text-center'>
-            <p className='text-gray-600'>
+            <p className='text-gray-600 dark:text-gray-300'>
               Sudah punya akun?{' '}
               <Link
                 to='/login'
-                className='text-primary-600 hover:text-primary-700 font-medium'
+                className='text-primary-600 dark:text-primary-400 hover:text-primary-700 dark:hover:text-primary-300 font-medium'
               >
                 Masuk
               </Link>

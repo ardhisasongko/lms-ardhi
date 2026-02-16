@@ -22,7 +22,7 @@ const CourseDetail = () => {
         const response = await api.getCourse(id);
         setCourse(response.data.course);
         setUserProgress(response.data.userProgress || []);
-        setIsDemo(false);
+        setIsDemo(false); // Successfully loaded from backend
 
         // Expand first module by default
         if (response.data.course?.modules?.length > 0) {
@@ -31,24 +31,29 @@ const CourseDetail = () => {
       } catch (err) {
         console.error('Error fetching course:', err);
 
-        // Try to load demo course
-        const demoCourse = getDemoCourseWithDetails(id);
-        if (demoCourse) {
-          setCourse(demoCourse);
-          setIsDemo(true);
-          // Expand first module by default
-          if (demoCourse.modules?.length > 0) {
-            setExpandedModules({ [demoCourse.modules[0].id]: true });
+        // Only use demo data if user is NOT authenticated
+        if (!isAuthenticated) {
+          const demoCourse = getDemoCourseWithDetails(id);
+          if (demoCourse) {
+            setCourse(demoCourse);
+            setIsDemo(true);
+            // Expand first module by default
+            if (demoCourse.modules?.length > 0) {
+              setExpandedModules({ [demoCourse.modules[0].id]: true });
+            }
+          } else {
+            setError('Course tidak ditemukan.');
           }
         } else {
-          setError('Course tidak ditemukan.');
+          // User is authenticated but API failed - show error, don't use demo
+          setError('Gagal memuat course. Silakan coba lagi.');
         }
       } finally {
         setLoading(false);
       }
     };
     fetchCourse();
-  }, [id]);
+  }, [id, isAuthenticated]);
 
   const toggleModule = (moduleId) => {
     setExpandedModules((prev) => ({
@@ -84,7 +89,8 @@ const CourseDetail = () => {
     );
   }
 
-  if (error || !course) {
+  // Only show error if loading is complete and there's actually an error or no course
+  if (!loading && (error || !course)) {
     return (
       <div className='page-container py-12'>
         <div className='container-main text-center'>
@@ -104,7 +110,7 @@ const CourseDetail = () => {
           <h2 className='text-xl font-semibold text-gray-900 mb-2'>
             Materi tidak ditemukan
           </h2>
-          <p className='text-gray-500 mb-4'>{error}</p>
+          <p className='text-gray-500 mb-4'>{error || 'Course tidak tersedia'}</p>
           <Link to='/courses' className='btn-primary'>
             Kembali ke Materi TKA
           </Link>
@@ -275,13 +281,12 @@ const CourseDetail = () => {
                               >
                                 <div className='flex items-center space-x-2 sm:space-x-4 min-w-0 flex-1'>
                                   <div
-                                    className={`w-6 h-6 sm:w-8 sm:h-8 rounded-full flex items-center justify-center flex-shrink-0 ${
-                                      isCompleted
-                                        ? 'bg-green-100 text-green-600'
-                                        : isOngoing
-                                          ? 'bg-blue-100 text-blue-600'
-                                          : 'bg-gray-100 text-gray-400'
-                                    }`}
+                                    className={`w-6 h-6 sm:w-8 sm:h-8 rounded-full flex items-center justify-center flex-shrink-0 ${isCompleted
+                                      ? 'bg-green-100 text-green-600'
+                                      : isOngoing
+                                        ? 'bg-blue-100 text-blue-600'
+                                        : 'bg-gray-100 text-gray-400'
+                                      }`}
                                   >
                                     {isCompleted ? (
                                       <svg
