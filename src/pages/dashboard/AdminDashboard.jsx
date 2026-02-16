@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, memo } from 'react';
 import {
     Radar, RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, ResponsiveContainer,
     LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend,
@@ -9,7 +9,7 @@ import { exportAdminStatsToExcel } from '../../services/ExportService';
 import { Users, BookOpen, Activity, TrendingUp, Download } from 'lucide-react';
 import toast from 'react-hot-toast';
 
-const AdminDashboard = () => {
+const AdminDashboard = memo(() => {
     const [stats, setStats] = useState(null);
     const [trendData, setTrendData] = useState([]);
     const [courseData, setCourseData] = useState([]);
@@ -170,6 +170,8 @@ const AdminDashboard = () => {
             </div>
         </div>
     );
-};
+});
+
+AdminDashboard.displayName = 'AdminDashboard';
 
 export default AdminDashboard;

@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import LazyYouTubeEmbed from '../components/LazyYouTubeEmbed';
 
 const Landing = () => {
   const { isAuthenticated } = useAuth();
@@ -96,21 +97,16 @@ const Landing = () => {
                 </span>
               </div>
 
-              {/* Main Card */}
+              {/* Main Card with Lazy YouTube */}
               <div className='bg-white dark:bg-gray-800 rounded-2xl shadow-2xl p-2 transform hover:scale-105 transition-transform duration-300'>
                 <div className='bg-gradient-to-br from-primary-500 via-secondary-500 to-accent-500 rounded-xl p-1'>
                   <div className='bg-white dark:bg-gray-900 rounded-lg p-6'>
                     <div className='video-container rounded-lg overflow-hidden bg-gradient-to-br from-gray-100 to-gray-50'>
-                      <div className='relative w-full pt-[56.25%] rounded-lg overflow-hidden'>
-                        <iframe
-                          src='https://www.youtube.com/embed/KwJ_HMedAFQ?start=21'
-                          title='BEDAH KISI-KISI TKA Bahasa Indonesia SMP/MTs Bagian 1'
-                          frameBorder='0'
-                          allow='accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture'
-                          allowFullScreen
-                          className='absolute top-0 left-0 w-full h-full rounded-lg shadow-lg'
-                        ></iframe>
-                      </div>
+                      <LazyYouTubeEmbed
+                        videoId="KwJ_HMedAFQ"
+                        title="BEDAH KISI-KISI TKA Bahasa Indonesia SMP/MTs Bagian 1"
+                        startTime={21}
+                      />
                     </div>
                   </div>
                 </div>

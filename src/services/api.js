@@ -111,6 +111,23 @@ class ApiService {
     return this.handleResponse(response);
   }
 
+  /**
+   * Clear cache for specific pattern or all cache
+   */
+  clearCache(pattern = null) {
+    if (pattern) {
+      // Clear cache entries matching pattern
+      for (const key of cache.keys()) {
+        if (key.includes(pattern)) {
+          cache.delete(key);
+        }
+      }
+    } else {
+      // Clear all cache
+      cache.clear();
+    }
+  }
+
   // =====================
   // Auth Endpoints
   // =====================
@@ -150,11 +167,15 @@ class ApiService {
   }
 
   async createCourse(courseData) {
-    return this.post('/courses', courseData);
+    const result = await this.post('/courses', courseData);
+    this.clearCache('/courses'); // Invalidate courses cache
+    return result;
   }
 
   async addModule(courseId, title, order) {
-    return this.post(`/courses/${courseId}/modules`, { title, order });
+    const result = await this.post(`/courses/${courseId}/modules`, { title, order });
+    this.clearCache(`/courses/${courseId}`); // Invalidate specific course cache
+    return result;
   }
 
   // =====================
@@ -166,7 +187,9 @@ class ApiService {
   }
 
   async createLesson(lessonData) {
-    return this.post('/lessons', lessonData);
+    const result = await this.post('/lessons', lessonData);
+    this.clearCache('/courses'); // Invalidate courses cache
+    return result;
   }
 
   async addQuizQuestions(lessonId, questions) {

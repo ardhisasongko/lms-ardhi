@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, memo } from 'react';
 import {
     Radar, RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, ResponsiveContainer,
     LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend
@@ -7,7 +7,7 @@ import { getStudentProgress, getQuizHistory } from '../../services/AnalyticsServ
 import { Award, Clock, BookOpen } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 
-const StudentDashboard = () => {
+const StudentDashboard = memo(() => {
     const { user } = useAuth();
     const [progressData, setProgressData] = useState([]);
     const [historyData, setHistoryData] = useState([]);
@@ -142,6 +142,8 @@ const StudentDashboard = () => {
             </div>
         </div>
     );
-};
+});
+
+StudentDashboard.displayName = 'StudentDashboard';
 
 export default StudentDashboard;

@@ -1,6 +1,8 @@
 import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
+import helmet from 'helmet';
+import { apiLimiter } from './middleware/rateLimiter.js';
 
 // Import routes
 import authRoutes from './routes/auth.js';
@@ -18,7 +20,25 @@ const app = express();
 app.locals.supabase = supabase;
 const PORT = process.env.PORT || 5000;
 
-// Middleware
+// Security Middleware
+// Helmet.js - Set security headers
+app.use(
+  helmet({
+    contentSecurityPolicy: {
+      directives: {
+        defaultSrc: ["'self'"],
+        styleSrc: ["'self'", "'unsafe-inline'"],
+        scriptSrc: ["'self'"],
+        imgSrc: ["'self'", 'data:', 'https:'],
+      },
+    },
+    crossOriginEmbedderPolicy: false, // Allow embedding for development
+  })
+);
+
+// Rate limiting - Apply to all requests
+app.use('/api/', apiLimiter);
+
 // Middleware to allow Private Network Access (for accessing localhost from public URL)
 app.use((req, res, next) => {
   res.setHeader('Access-Control-Allow-Private-Network', 'true');
@@ -74,10 +94,14 @@ app.get('/api/health', (req, res) => {
 // Error handling middleware
 app.use((err, req, res, next) => {
   console.error('Error:', err);
+
+  // Don't expose internal error details in production
+  const isDevelopment = process.env.NODE_ENV === 'development';
+
   res.status(err.status || 500).json({
     success: false,
-    message: err.message || 'Internal Server Error',
-    ...(process.env.NODE_ENV === 'development' && { stack: err.stack }),
+    message: isDevelopment ? err.message : 'An error occurred. Please try again later.',
+    ...(isDevelopment && { stack: err.stack }),
   });
 });
 

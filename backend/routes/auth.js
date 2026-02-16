@@ -5,6 +5,8 @@ import { body, validationResult } from 'express-validator';
 import { findByColumn, insertRow, TABLES } from '../services/supabase.js';
 import crypto from 'crypto';
 import { authenticateToken } from '../middleware/auth.js';
+import { authLimiter, registerLimiter } from '../middleware/rateLimiter.js';
+import { sanitizeText } from '../middleware/sanitize.js';
 
 const router = express.Router();
 
@@ -31,8 +33,9 @@ const loginValidation = [
 /**
  * POST /api/auth/register
  * Register a new user
+ * Rate limited: 3 attempts per hour per IP
  */
-router.post('/register', registerValidation, async (req, res) => {
+router.post('/register', registerLimiter, registerValidation, async (req, res) => {
   try {
     // Check validation errors
     const errors = validationResult(req);
@@ -106,8 +109,9 @@ router.post('/register', registerValidation, async (req, res) => {
 /**
  * POST /api/auth/login
  * Login user
+ * Rate limited: 5 attempts per 15 minutes per IP
  */
-router.post('/login', loginValidation, async (req, res) => {
+router.post('/login', authLimiter, loginValidation, async (req, res) => {
   try {
     // Check validation errors
     const errors = validationResult(req);
