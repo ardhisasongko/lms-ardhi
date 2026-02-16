@@ -116,19 +116,19 @@ class ApiService {
   // =====================
 
   async register(name, email, password, role = 'student') {
-    return this.post('/api/auth/register', { name, email, password, role });
+    return this.post('/auth/register', { name, email, password, role });
   }
 
   async login(email, password) {
-    return this.post('/api/auth/login', { email, password });
+    return this.post('/auth/login', { email, password });
   }
 
   async getProfile() {
-    return this.get('/api/auth/me');
+    return this.get('/auth/me');
   }
 
   async refreshToken() {
-    return this.post('/api/auth/refresh', {});
+    return this.post('/auth/refresh', {});
   }
 
   // =====================
@@ -136,25 +136,25 @@ class ApiService {
   // =====================
 
   async getCourses(page = 1, limit = 10, category = '') {
-    let url = `/api/courses?page=${page}&limit=${limit}`;
+    let url = `/courses?page=${page}&limit=${limit}`;
     if (category) url += `&category=${encodeURIComponent(category)}`;
     return this.get(url);
   }
 
   async getCourse(id) {
-    return this.get(`/api/courses/${id}`);
+    return this.get(`/courses/${id}`);
   }
 
   async getCategories() {
-    return this.get('/api/courses/categories');
+    return this.get('/courses/categories');
   }
 
   async createCourse(courseData) {
-    return this.post('/api/courses', courseData);
+    return this.post('/courses', courseData);
   }
 
   async addModule(courseId, title, order) {
-    return this.post(`/api/courses/${courseId}/modules`, { title, order });
+    return this.post(`/courses/${courseId}/modules`, { title, order });
   }
 
   // =====================
@@ -162,15 +162,15 @@ class ApiService {
   // =====================
 
   async getLesson(id) {
-    return this.get(`/api/lessons/${id}`);
+    return this.get(`/lessons/${id}`);
   }
 
   async createLesson(lessonData) {
-    return this.post('/api/lessons', lessonData);
+    return this.post('/lessons', lessonData);
   }
 
   async addQuizQuestions(lessonId, questions) {
-    return this.post(`/api/lessons/${lessonId}/quizzes`, { questions });
+    return this.post(`/lessons/${lessonId}/quizzes`, { questions });
   }
 
   // =====================
@@ -178,11 +178,11 @@ class ApiService {
   // =====================
 
   async getQuiz(lessonId) {
-    return this.get(`/api/quiz/lesson/${lessonId}`);
+    return this.get(`/quiz/lesson/${lessonId}`);
   }
 
   async submitQuiz(lessonId, answers) {
-    return this.post('/api/quiz/submit', { lesson_id: lessonId, answers });
+    return this.post('/quiz/submit', { lesson_id: lessonId, answers });
   }
 
   // =====================
@@ -190,11 +190,11 @@ class ApiService {
   // =====================
 
   async getProgress(userId) {
-    return this.get(`/api/progress/${userId}`);
+    return this.get(`/progress/${userId}`);
   }
 
   async getCourseProgress(courseId) {
-    return this.get(`/api/progress/course/${courseId}`);
+    return this.get(`/progress/course/${courseId}`);
   }
 }
 
