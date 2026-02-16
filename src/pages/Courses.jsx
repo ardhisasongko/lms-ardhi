@@ -124,10 +124,10 @@ const Courses = () => {
           <span className='inline-block px-3 sm:px-4 py-1 bg-accent-100 text-accent-700 rounded-full text-xs sm:text-sm font-medium mb-2 sm:mb-3'>
             📚 Katalog TKA
           </span>
-          <h1 className='text-xl sm:text-3xl font-bold text-gray-900 mb-1 sm:mb-2'>
+          <h1 className='text-xl sm:text-3xl font-bold text-gray-900 dark:text-white mb-1 sm:mb-2'>
             Jelajahi <span className='text-gradient'>Materi TKA</span>
           </h1>
-          <p className='text-gray-600 text-sm sm:text-base'>
+          <p className='text-gray-600 dark:text-gray-300 text-sm sm:text-base'>
             Pilih subtes yang ingin dipelajari
           </p>
         </div>
@@ -137,8 +137,8 @@ const Courses = () => {
           <button
             onClick={() => handleCategoryChange('')}
             className={`px-3 sm:px-4 py-1.5 sm:py-2 rounded-full text-xs sm:text-sm font-medium transition-all ${selectedCategory === ''
-                ? 'bg-gradient-to-r from-primary-600 to-secondary-600 text-white shadow-md'
-                : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+              ? 'bg-gradient-to-r from-primary-600 to-secondary-600 text-white shadow-md'
+              : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
               }`}
           >
             ✨ Semua
@@ -150,8 +150,8 @@ const Courses = () => {
                 key={category}
                 onClick={() => handleCategoryChange(category)}
                 className={`px-3 sm:px-4 py-1.5 sm:py-2 rounded-full text-xs sm:text-sm font-medium transition-all ${selectedCategory === category
-                    ? `bg-gradient-to-r ${catColors.bg} text-white shadow-md`
-                    : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                  ? `bg-gradient-to-r ${catColors.bg} text-white shadow-md`
+                  : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
                   }`}
               >
                 {category}
@@ -183,10 +183,10 @@ const Courses = () => {
                 d='M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253'
               />
             </svg>
-            <h3 className='text-base sm:text-lg font-medium text-gray-900 mb-1'>
+            <h3 className='text-base sm:text-lg font-medium text-gray-900 dark:text-white mb-1'>
               Belum ada course
             </h3>
-            <p className='text-gray-500 text-sm'>Course akan segera tersedia</p>
+            <p className='text-gray-500 dark:text-gray-400 text-sm'>Course akan segera tersedia</p>
           </div>
         ) : (
           <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-6'>
@@ -212,16 +212,16 @@ const Courses = () => {
                   </svg>
                 </div>
                 <div className='p-3 sm:p-5'>
-                  <span className='inline-block px-2 py-0.5 sm:py-1 bg-primary-100 text-primary-700 text-[10px] sm:text-xs font-medium rounded mb-1 sm:mb-2'>
+                  <span className='inline-block px-2 py-0.5 sm:py-1 bg-primary-100 dark:bg-primary-900/50 text-primary-700 dark:text-primary-300 text-[10px] sm:text-xs font-medium rounded mb-1 sm:mb-2'>
                     {course.category}
                   </span>
-                  <h3 className='text-sm sm:text-base font-semibold text-gray-900 mb-1 sm:mb-2 line-clamp-2'>
+                  <h3 className='text-sm sm:text-base font-semibold text-gray-900 dark:text-white mb-1 sm:mb-2 line-clamp-2'>
                     {course.title}
                   </h3>
-                  <p className='text-gray-500 text-xs sm:text-sm line-clamp-2 hidden sm:block'>
+                  <p className='text-gray-500 dark:text-gray-300 text-xs sm:text-sm line-clamp-2 hidden sm:block'>
                     {course.description}
                   </p>
-                  <div className='mt-2 sm:mt-4 flex items-center text-xs sm:text-sm text-gray-400'>
+                  <div className='mt-2 sm:mt-4 flex items-center text-xs sm:text-sm text-gray-400 dark:text-gray-400'>
                     <svg
                       className='w-3 h-3 sm:w-4 sm:h-4 mr-1'
                       fill='none'
