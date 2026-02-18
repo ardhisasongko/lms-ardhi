@@ -38,6 +38,8 @@ export const registerLimiter = rateLimit({
  * General API rate limiter
  * Prevents API abuse and DDoS
  */
+
+// ayoo kita mulai alagi 
 export const apiLimiter = rateLimit({
     windowMs: 15 * 60 * 1000, // 15 minutes
     max: 300, // Limit each IP to 300 requests per windowMs
