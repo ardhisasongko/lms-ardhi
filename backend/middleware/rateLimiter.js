@@ -38,6 +38,7 @@ export const registerLimiter = rateLimit({
  * General API rate limiter
  * Prevents API abuse and DDoS
  */
+// COba lagi dan bisa
 
 // ayoo kita mulai alagi 
 export const apiLimiter = rateLimit({
