@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom';
+import { Sparkles, Rocket, BookOpen, Target, PartyPopper } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import LazyYouTubeEmbed from '../components/LazyYouTubeEmbed';
 
@@ -7,28 +8,19 @@ const Landing = () => {
 
   return (
     <div className='page-container'>
-      {/* Hero Section */}
-      <section className='relative overflow-hidden py-20 lg:py-32'>
-        {/* Gradient Background */}
-        <div className='absolute inset-0 bg-gradient-to-br from-primary-50 via-secondary-50 to-accent-50 dark:from-gray-800 dark:via-gray-900 dark:to-gray-800' />
-
-        {/* Decorative Blobs */}
-        <div className='absolute top-0 left-0 w-72 h-72 bg-primary-300 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-pulse' />
-        <div
-          className='absolute top-0 right-0 w-72 h-72 bg-secondary-300 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-pulse'
-          style={{ animationDelay: '1s' }}
-        />
-        <div
-          className='absolute bottom-0 left-1/2 w-72 h-72 bg-accent-300 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-pulse'
-          style={{ animationDelay: '2s' }}
-        />
+      {/* Hero Section — flat solid background, easy on the eyes */}
+      <section className='relative overflow-hidden py-20 lg:py-32 bg-primary-50 dark:bg-slate-800/60'>
+        {/* Flat decorative circles (solid colors, no gradients/blurs) */}
+        <div className='absolute -top-24 -left-24 w-72 h-72 bg-primary-100 dark:bg-slate-700/50 rounded-full' />
+        <div className='absolute -bottom-32 -right-16 w-96 h-96 bg-secondary-100 dark:bg-slate-700/40 rounded-full' />
 
         <div className='container-main relative'>
           <div className='grid lg:grid-cols-2 gap-12 items-center'>
-            <div className='text-center lg:text-left'>
-              <div className='inline-block px-4 py-2 bg-white/80 dark:bg-gray-800/80 backdrop-blur rounded-full shadow-sm mb-6'>
+            <div className='text-center lg:text-left animate-fade-in'>
+              <div className='inline-flex items-center gap-2 px-4 py-2 bg-surface dark:bg-gray-800 rounded-full shadow-sm border border-primary-100 dark:border-slate-700 mb-6'>
+                <Sparkles className='w-4 h-4 text-secondary-600 dark:text-secondary-400' />
                 <span className='text-sm font-medium'>
-                  <span className='text-secondary-600 dark:text-secondary-400'>✨ Platform</span>
+                  <span className='text-secondary-600 dark:text-secondary-400'>Platform</span>
                   <span className='text-gray-600 dark:text-gray-300'> Persiapan TKA Terbaik</span>
                 </span>
               </div>
@@ -56,7 +48,8 @@ const Landing = () => {
                       to='/register'
                       className='btn-accent text-lg px-8 py-3'
                     >
-                      🚀 Mulai Latihan Gratis
+                      <Rocket className='w-5 h-5 mr-2' />
+                      Mulai Latihan Gratis
                     </Link>
                     <Link
                       to='/courses'
@@ -72,36 +65,36 @@ const Landing = () => {
             <div className='relative'>
               {/* Floating Cards - Responsive & Mobile Friendly */}
               <div
-                className='absolute -top-2 -left-2 bg-gradient-to-br from-secondary-500 to-secondary-600 text-white px-3 py-2 rounded-lg shadow-xl z-10 animate-bounce flex items-center gap-1 sm:px-4 sm:py-3 sm:rounded-xl sm:gap-2'
+                className='absolute -top-2 -left-2 bg-secondary-600 text-white px-3 py-2 rounded-lg shadow-xl z-10 animate-bounce flex items-center gap-1 sm:px-4 sm:py-3 sm:rounded-xl sm:gap-2'
                 style={{
                   animationDuration: '3s',
                   fontSize: 'clamp(0.85rem, 2vw, 1.1rem)',
                 }}
               >
-                <span className='text-lg sm:text-2xl'>📚</span>
+                <BookOpen className='w-5 h-5 sm:w-6 sm:h-6' />
                 <span className='font-semibold text-xs sm:text-base'>
                   5 Subtes TKA
                 </span>
               </div>
 
               <div
-                className='absolute -bottom-2 -right-2 bg-gradient-to-br from-accent-500 to-accent-600 text-white px-3 py-2 rounded-lg shadow-xl z-10 animate-bounce flex items-center gap-1 sm:px-4 sm:py-3 sm:rounded-xl sm:gap-2'
+                className='absolute -bottom-2 -right-2 bg-accent-500 text-white px-3 py-2 rounded-lg shadow-xl z-10 animate-bounce flex items-center gap-1 sm:px-4 sm:py-3 sm:rounded-xl sm:gap-2'
                 style={{
                   animationDuration: '3.5s',
                   fontSize: 'clamp(0.85rem, 2vw, 1.1rem)',
                 }}
               >
-                <span className='text-lg sm:text-2xl'>🎯</span>
+                <Target className='w-5 h-5 sm:w-6 sm:h-6' />
                 <span className='font-semibold text-xs sm:text-base'>
                   Latihan Soal
                 </span>
               </div>
 
               {/* Main Card with Lazy YouTube */}
-              <div className='bg-white dark:bg-gray-800 rounded-2xl shadow-2xl p-2 transform hover:scale-105 transition-transform duration-300'>
-                <div className='bg-gradient-to-br from-primary-500 via-secondary-500 to-accent-500 rounded-xl p-1'>
-                  <div className='bg-white dark:bg-gray-900 rounded-lg p-6'>
-                    <div className='video-container rounded-lg overflow-hidden bg-gradient-to-br from-gray-100 to-gray-50'>
+              <div className='bg-surface dark:bg-gray-800 rounded-2xl shadow-2xl p-2 transform hover:scale-105 transition-transform duration-300'>
+                <div className='bg-primary-600 rounded-xl p-1'>
+                  <div className='bg-surface dark:bg-gray-900 rounded-lg p-6'>
+                    <div className='video-container rounded-lg overflow-hidden bg-gray-100 dark:bg-gray-800'>
                       <LazyYouTubeEmbed
                         videoId="KwJ_HMedAFQ"
                         title="BEDAH KISI-KISI TKA Bahasa Indonesia SMP/MTs Bagian 1"
@@ -117,19 +110,7 @@ const Landing = () => {
       </section>
 
       {/* Features Section */}
-      <section className='py-20 bg-white dark:bg-gray-900 relative overflow-hidden transition-colors'>
-        {/* Background Pattern */}
-        <div className='absolute inset-0 opacity-5'>
-          <div
-            className='absolute top-0 left-0 w-full h-full'
-            style={{
-              backgroundImage:
-                'radial-gradient(circle, #3b82f6 1px, transparent 1px)',
-              backgroundSize: '30px 30px',
-            }}
-          />
-        </div>
-
+      <section className='py-20 bg-surface dark:bg-gray-900 relative overflow-hidden transition-colors'>
         <div className='container-main relative'>
           <div className='text-center mb-16'>
             <span className='inline-block px-4 py-1 bg-secondary-100 dark:bg-secondary-900 text-secondary-700 dark:text-secondary-300 rounded-full text-sm font-medium mb-4'>
@@ -148,7 +129,7 @@ const Landing = () => {
           <div className='grid md:grid-cols-3 gap-8'>
             {/* Feature 1 - Video */}
             <div className='group card p-8 text-center hover:shadow-xl transition-all duration-300 border-t-4 border-t-primary-500'>
-              <div className='w-16 h-16 bg-gradient-to-br from-primary-500 to-primary-600 rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-lg shadow-primary-500/30 group-hover:scale-110 transition-transform'>
+              <div className='w-16 h-16 bg-primary-600 rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-lg shadow-primary-500/30 group-hover:scale-110 transition-transform'>
                 <svg
                   className='w-8 h-8 text-white'
                   fill='none'
@@ -174,7 +155,7 @@ const Landing = () => {
 
             {/* Feature 2 - Quiz */}
             <div className='group card p-8 text-center hover:shadow-xl transition-all duration-300 border-t-4 border-t-secondary-500'>
-              <div className='w-16 h-16 bg-gradient-to-br from-secondary-500 to-secondary-600 rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-lg shadow-secondary-500/30 group-hover:scale-110 transition-transform'>
+              <div className='w-16 h-16 bg-secondary-600 rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-lg shadow-secondary-500/30 group-hover:scale-110 transition-transform'>
                 <svg
                   className='w-8 h-8 text-white'
                   fill='none'
@@ -200,7 +181,7 @@ const Landing = () => {
 
             {/* Feature 3 - Progress */}
             <div className='group card p-8 text-center hover:shadow-xl transition-all duration-300 border-t-4 border-t-accent-500'>
-              <div className='w-16 h-16 bg-gradient-to-br from-accent-500 to-accent-600 rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-lg shadow-accent-500/30 group-hover:scale-110 transition-transform'>
+              <div className='w-16 h-16 bg-accent-500 rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-lg shadow-accent-500/30 group-hover:scale-110 transition-transform'>
                 <svg
                   className='w-8 h-8 text-white'
                   fill='none'
@@ -228,7 +209,7 @@ const Landing = () => {
       </section>
 
       {/* Stats Section */}
-      <section className='py-20 bg-gradient-to-r from-primary-600 via-secondary-600 to-primary-700 relative overflow-hidden'>
+      <section className='py-20 bg-primary-700 relative overflow-hidden'>
         {/* Decorative Elements */}
         <div className='absolute inset-0'>
           <div className='absolute top-0 left-0 w-full h-full opacity-10'>
@@ -271,7 +252,7 @@ const Landing = () => {
       </section>
 
       {/* How It Works */}
-      <section className='py-20 bg-gray-50 dark:bg-gray-800 transition-colors'>
+      <section className='py-20 bg-page dark:bg-gray-800 transition-colors'>
         <div className='container-main'>
           <div className='text-center mb-16'>
             <span className='inline-block px-4 py-1 bg-accent-100 dark:bg-accent-900 text-accent-700 dark:text-accent-300 rounded-full text-sm font-medium mb-4'>
@@ -286,7 +267,7 @@ const Landing = () => {
           <div className='grid md:grid-cols-3 gap-8'>
             {/* Step 1 */}
             <div className='relative text-center'>
-              <div className='w-16 h-16 bg-gradient-to-br from-primary-500 to-primary-600 rounded-full flex items-center justify-center mx-auto mb-6 text-2xl font-bold text-white shadow-lg'>
+              <div className='w-16 h-16 bg-primary-600 rounded-full flex items-center justify-center mx-auto mb-6 text-2xl font-bold text-white shadow-lg'>
                 1
               </div>
               <h3 className='text-xl font-semibold text-gray-900 dark:text-white mb-3'>
@@ -296,12 +277,12 @@ const Landing = () => {
                 Buat akun dalam hitungan detik dan mulai eksplorasi materi TKA
               </p>
               {/* Connector Line */}
-              <div className='hidden md:block absolute top-8 left-1/2 w-full h-0.5 bg-gradient-to-r from-primary-300 to-secondary-300' />
+              <div className='hidden md:block absolute top-8 left-1/2 w-full h-0.5 bg-primary-200 dark:bg-slate-600' />
             </div>
 
             {/* Step 2 */}
             <div className='relative text-center'>
-              <div className='w-16 h-16 bg-gradient-to-br from-secondary-500 to-secondary-600 rounded-full flex items-center justify-center mx-auto mb-6 text-2xl font-bold text-white shadow-lg'>
+              <div className='w-16 h-16 bg-secondary-600 rounded-full flex items-center justify-center mx-auto mb-6 text-2xl font-bold text-white shadow-lg'>
                 2
               </div>
               <h3 className='text-xl font-semibold text-gray-900 dark:text-white mb-3'>
@@ -310,12 +291,12 @@ const Landing = () => {
               <p className='text-gray-600 dark:text-gray-300'>
                 Temukan subtes TKA yang ingin Anda kuasai lebih dalam
               </p>
-              <div className='hidden md:block absolute top-8 left-1/2 w-full h-0.5 bg-gradient-to-r from-secondary-300 to-accent-300' />
+              <div className='hidden md:block absolute top-8 left-1/2 w-full h-0.5 bg-secondary-200 dark:bg-slate-600' />
             </div>
 
             {/* Step 3 */}
             <div className='text-center'>
-              <div className='w-16 h-16 bg-gradient-to-br from-accent-500 to-accent-600 rounded-full flex items-center justify-center mx-auto mb-6 text-2xl font-bold text-white shadow-lg'>
+              <div className='w-16 h-16 bg-accent-500 rounded-full flex items-center justify-center mx-auto mb-6 text-2xl font-bold text-white shadow-lg'>
                 3
               </div>
               <h3 className='text-xl font-semibold text-gray-900 dark:text-white mb-3'>
@@ -330,16 +311,13 @@ const Landing = () => {
       </section>
 
       {/* CTA Section */}
-      <section className='py-20 bg-white dark:bg-gray-900 relative overflow-hidden transition-colors'>
-        <div className='absolute inset-0 bg-gradient-to-br from-primary-50 via-white to-secondary-50 dark:from-gray-800 dark:via-gray-900 dark:to-gray-800' />
-
+      <section className='py-20 bg-primary-50 dark:bg-gray-900 relative overflow-hidden transition-colors'>
         <div className='container-main text-center relative'>
-          <div className='inline-block p-1 bg-gradient-to-r from-primary-500 via-secondary-500 to-accent-500 rounded-2xl mb-8'>
-            <div className='bg-white dark:bg-gray-800 px-6 py-3 rounded-xl'>
-              <span className='text-transparent bg-clip-text bg-gradient-to-r from-primary-600 via-secondary-500 to-accent-500 font-semibold'>
-                🎉 Raih PTN impianmu hari ini!
-              </span>
-            </div>
+          <div className='inline-flex items-center gap-2 px-6 py-3 bg-surface dark:bg-gray-800 border-2 border-primary-500 rounded-2xl shadow-sm mb-8'>
+            <PartyPopper className='w-5 h-5 text-accent-500' />
+            <span className='text-primary-700 dark:text-primary-300 font-semibold'>
+              Raih PTN impianmu hari ini!
+            </span>
           </div>
 
           <h2 className='text-3xl lg:text-4xl font-bold text-gray-900 dark:text-white mb-4'>
@@ -352,7 +330,8 @@ const Landing = () => {
           {!isAuthenticated && (
             <div className='flex flex-col sm:flex-row gap-4 justify-center'>
               <Link to='/register' className='btn-accent text-lg px-8 py-3'>
-                🚀 Daftar Sekarang - Gratis!
+                <Rocket className='w-5 h-5 mr-2' />
+                Daftar Sekarang - Gratis!
               </Link>
               <Link to='/courses' className='btn-outline text-lg px-8 py-3'>
                 Jelajahi Materi TKA
