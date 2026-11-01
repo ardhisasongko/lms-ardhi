@@ -1,3 +1,7 @@
+/* global process */
+// Validate required environment FIRST — this import must stay at the top so
+// the check runs before routes/services (e.g. the Supabase client) load.
+import './config/validateEnv.js';
 import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
@@ -11,7 +15,9 @@ import lessonRoutes from './routes/lessons.js';
 import quizRoutes from './routes/quiz.js';
 import progressRoutes from './routes/progress.js';
 
-// Load environment variables
+// Load environment variables (required variables were already validated by
+// config/validateEnv.js above — the server exits before this point if any
+// are missing or too weak)
 dotenv.config();
 
 import { supabase } from './services/supabase.js';
@@ -45,14 +51,22 @@ app.use((req, res, next) => {
   next();
 });
 
+// CORS allowlist. Set CORS_ORIGIN (comma-separated list of origins) in the
+// environment to override; when it is not set, the historical defaults below
+// are used so existing deployments keep working.
+const defaultCorsOrigins = [
+  process.env.FRONTEND_URL,
+  'http://localhost:5173',
+  'https://tka-ardhi.netlify.app',
+  'https://ardhisasongko.github.io',
+].filter(Boolean); // Remove undefined values
+const allowedOrigins = process.env.CORS_ORIGIN
+  ? process.env.CORS_ORIGIN.split(',').map((origin) => origin.trim()).filter(Boolean)
+  : defaultCorsOrigins;
+
 app.use(
   cors({
-    origin: [
-      process.env.FRONTEND_URL,
-      'http://localhost:5173',
-      'https://tka-ardhi.netlify.app',
-      'https://ardhisasongko.github.io',
-    ].filter(Boolean), // Remove undefined values
+    origin: allowedOrigins,
     credentials: true,
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization', 'Access-Control-Allow-Private-Network'],
@@ -61,17 +75,22 @@ app.use(
   }),
 );
 
-// Explicitly handle OPTIONS requests for Private Network Access
+// Explicitly handle OPTIONS requests for Private Network Access.
+// Only reflect the Origin header when it is on the CORS allowlist — never
+// echo arbitrary origins together with credentials.
 app.options('*', (req, res) => { // checks for any OPTIONS request
   res.setHeader('Access-Control-Allow-Private-Network', 'true');
-  res.setHeader('Access-Control-Allow-Origin', req.headers.origin || '*');
+  const requestOrigin = req.headers.origin;
+  if (requestOrigin && allowedOrigins.includes(requestOrigin)) {
+    res.setHeader('Access-Control-Allow-Origin', requestOrigin);
+    res.setHeader('Access-Control-Allow-Credentials', 'true');
+  }
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization, Access-Control-Allow-Private-Network');
-  res.setHeader('Access-Control-Allow-Credentials', 'true');
   res.sendStatus(204);
 });
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+app.use(express.json({ limit: '1mb' }));
+app.use(express.urlencoded({ extended: true, limit: '1mb' }));
 
 // Request logging middleware
 app.use((req, res, next) => {
@@ -86,7 +105,10 @@ app.use('/api/lessons', lessonRoutes);
 app.use('/api/quiz', quizRoutes);
 app.use('/api/progress', progressRoutes);
 
-// Health check endpoint
+// Health check endpoints (no sensitive data — safe for uptime monitors)
+app.get('/health', (req, res) => {
+  res.json({ status: 'OK', timestamp: new Date().toISOString() });
+});
 app.get('/api/health', (req, res) => {
   res.json({ status: 'OK', timestamp: new Date().toISOString() });
 });

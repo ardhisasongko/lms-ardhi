@@ -18,7 +18,7 @@ export default {
           800: '#1e40af',
           900: '#1e3a8a',
         },
-        // Secondary - Purple (accents & gradients)
+        // Secondary - Purple (accents)
         secondary: {
           50: '#faf5ff',
           100: '#f3e8ff',
@@ -44,15 +44,13 @@ export default {
           800: '#9a3412',
           900: '#7c2d12',
         },
+        // Soft, eye-friendly page background (light blue-gray, not glaring white)
+        page: '#E8EEF5',
+        // Soft white surface for cards/panels on top of the page background
+        surface: '#F7FAFC',
       },
       fontFamily: {
         sans: ['Inter', 'system-ui', 'sans-serif'],
-      },
-      backgroundImage: {
-        'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
-        'hero-gradient':
-          'linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f97316 100%)',
-        'card-gradient': 'linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%)',
       },
     },
   },

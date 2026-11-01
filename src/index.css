@@ -9,7 +9,7 @@
   }
 
   body {
-    @apply bg-gray-50 dark:bg-slate-900 text-gray-900 dark:text-slate-100 antialiased transition-colors;
+    @apply bg-page dark:bg-slate-900 text-gray-900 dark:text-slate-100 antialiased transition-colors;
     margin: 0;
     min-width: 320px;
     min-height: 100vh;
@@ -23,7 +23,7 @@
   }
 
   .btn-primary {
-    @apply btn bg-gradient-to-r from-primary-600 to-secondary-600 text-white hover:from-primary-700 hover:to-secondary-700 focus:ring-primary-500 shadow-lg shadow-primary-500/25;
+    @apply btn bg-primary-600 text-white hover:bg-primary-700 focus:ring-primary-500 shadow-lg shadow-primary-500/25;
   }
 
   .btn-secondary {
@@ -31,7 +31,7 @@
   }
 
   .btn-accent {
-    @apply btn bg-gradient-to-r from-accent-500 to-accent-600 text-white hover:from-accent-600 hover:to-accent-700 focus:ring-accent-500 shadow-lg shadow-accent-500/25;
+    @apply btn bg-accent-500 text-white hover:bg-accent-600 focus:ring-accent-500 shadow-lg shadow-accent-500/25;
   }
 
   .btn-outline {
@@ -43,7 +43,7 @@
   }
 
   .card {
-    @apply bg-white dark:bg-slate-800 rounded-lg shadow-sm border border-gray-100 dark:border-slate-700 transition-colors overflow-hidden;
+    @apply bg-surface dark:bg-slate-800 rounded-lg shadow-sm border border-gray-200/70 dark:border-slate-700 transition-colors overflow-hidden;
   }
 
   .card-hover {
@@ -51,7 +51,7 @@
   }
 
   .input {
-    @apply w-full px-4 py-2.5 border border-gray-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-primary-500 dark:focus:ring-primary-400 focus:border-transparent outline-none transition-all bg-white dark:bg-slate-700 text-gray-900 dark:text-slate-100 placeholder-gray-500 dark:placeholder-slate-400;
+    @apply w-full px-4 py-2.5 border border-gray-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-primary-500 dark:focus:ring-primary-400 focus:border-transparent outline-none transition-all bg-surface dark:bg-slate-700 text-gray-900 dark:text-slate-100 placeholder-gray-500 dark:placeholder-slate-400;
   }
 
   .label {
@@ -59,7 +59,7 @@
   }
 
   .page-container {
-    @apply min-h-screen bg-gray-50 dark:bg-slate-900 transition-colors;
+    @apply min-h-screen bg-page dark:bg-slate-900 transition-colors;
   }
 
   .container-main {
@@ -67,34 +67,37 @@
   }
 }
 
-/* Utility classes */
+/* Utility classes
+   NOTE: Class names below are kept for backward compatibility with existing
+   pages, but they now resolve to SOLID colors — gradients were removed from
+   the design system in favour of clean flat colors. */
 @layer utilities {
   .text-gradient {
-    @apply bg-gradient-to-r from-primary-600 via-secondary-500 to-accent-500 bg-clip-text text-transparent;
+    @apply text-primary-600 dark:text-primary-400;
   }
 
   .text-gradient-primary {
-    @apply bg-gradient-to-r from-primary-600 to-secondary-500 bg-clip-text text-transparent;
+    @apply text-primary-600 dark:text-primary-400;
   }
 
   .text-gradient-accent {
-    @apply bg-gradient-to-r from-accent-500 to-secondary-500 bg-clip-text text-transparent;
+    @apply text-accent-600 dark:text-accent-400;
   }
 
   .bg-gradient-hero {
-    @apply bg-gradient-to-br from-primary-50 via-secondary-50 to-accent-50;
+    @apply bg-primary-50 dark:bg-slate-800;
   }
 
   .bg-gradient-dark {
-    @apply bg-gradient-to-r from-primary-600 via-secondary-600 to-primary-700;
+    @apply bg-primary-700;
   }
 
   .bg-gradient-card {
-    @apply bg-gradient-to-br from-primary-500 to-secondary-600;
+    @apply bg-primary-600;
   }
 
   .border-gradient {
-    border-image: linear-gradient(135deg, #3b82f6, #a855f7, #f97316) 1;
+    border-color: #93c5fd;
   }
 }
 
@@ -163,4 +166,15 @@
 
 .animate-pulse-error {
   animation: pulse-error 0.5s ease-in-out;
+}
+/* Respect users who prefer reduced motion: tone down looping animations */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }

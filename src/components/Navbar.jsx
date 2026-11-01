@@ -38,7 +38,7 @@ const Navbar = () => {
         <div className='flex justify-between items-center h-16'>
           {/* Logo */}
           <Link to='/' className='flex items-center space-x-2'>
-            <div className='w-8 h-8 bg-gradient-to-br from-primary-600 to-secondary-600 rounded-lg flex items-center justify-center shadow-md'>
+            <div className='w-8 h-8 bg-primary-600 rounded-lg flex items-center justify-center shadow-md'>
               <svg
                 className='w-5 h-5 text-white'
                 fill='none'
@@ -83,7 +83,7 @@ const Navbar = () => {
                     onClick={() => setProfileMenuOpen(!profileMenuOpen)}
                     className='flex items-center space-x-2 hover:bg-gray-50 dark:hover:bg-gray-800 rounded-lg px-3 py-2 transition-colors cursor-pointer'
                   >
-                    <div className='w-8 h-8 bg-gradient-to-br from-primary-500 to-secondary-500 rounded-full flex items-center justify-center'>
+                    <div className='w-8 h-8 bg-primary-500 rounded-full flex items-center justify-center'>
                       <span className='text-white font-medium text-sm'>
                         {user?.name?.charAt(0).toUpperCase()}
                       </span>
