@@ -32,7 +32,7 @@ const Login = () => {
   };
 
   return (
-    <div className='min-h-screen flex items-center justify-center bg-gradient-to-br from-primary-50 via-secondary-50 to-accent-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 py-12 px-4 relative overflow-hidden transition-colors'>
+    <div className='min-h-screen flex items-center justify-center bg-page dark:bg-gray-900 py-12 px-4 relative overflow-hidden transition-colors'>
       {/* Decorative Blobs */}
       <div className='absolute top-0 left-0 w-64 h-64 bg-primary-300 rounded-full mix-blend-multiply filter blur-3xl opacity-20' />
       <div className='absolute bottom-0 right-0 w-64 h-64 bg-secondary-300 rounded-full mix-blend-multiply filter blur-3xl opacity-20' />
@@ -41,7 +41,7 @@ const Login = () => {
       <div className='max-w-md w-full relative'>
         <div className='text-center mb-8'>
           <Link to='/' className='inline-flex items-center space-x-2 mb-6'>
-            <div className='w-10 h-10 bg-gradient-to-br from-primary-600 to-secondary-600 rounded-lg flex items-center justify-center shadow-lg'>
+            <div className='w-10 h-10 bg-primary-600 rounded-lg flex items-center justify-center shadow-lg'>
               <svg
                 className='w-6 h-6 text-white'
                 fill='none'
